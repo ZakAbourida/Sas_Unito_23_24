@@ -1,14 +1,14 @@
 package businesslogic.user;
 
 public class UserManager {
-    private User currentUser;
+    private static User currentUser;
 
     public void fakeLogin() //TODO: bisogna implementare il login vero!
     {
         this.currentUser = new User();
     }
 
-    public User getCurrentUser() {
-        return this.currentUser;
+    public static User getCurrentUser() {
+        return currentUser;
     }
 }

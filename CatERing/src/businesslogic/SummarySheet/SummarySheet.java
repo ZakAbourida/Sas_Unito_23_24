@@ -21,7 +21,7 @@ public class SummarySheet {
 
     // Operazioni specifiche per SummarySheet
 
-    public static SummarySheet create(User owner, Service service, Event event, Menu menu) {
+    public static SummarySheet create(Service service) {
         // Implementazione della creazione di un SummarySheet
         return new SummarySheet("Note iniziali");
     }

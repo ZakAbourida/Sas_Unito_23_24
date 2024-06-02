@@ -1,13 +1,19 @@
 package businesslogic.user;
 
 public class User {
-    public boolean isChef() {
-        // TODO: questo è da implementare, versione di prova
-        return true;
-    }
+    private User user;
+    private String name;
 
+    public boolean isChef() {
+        return user instanceof Chef;
+    }
+    public boolean isOrganiser() {
+        return user instanceof Organiser;
+    }
+    public boolean isCook() {
+        return user instanceof Cook;
+    }
     public String getUserName() {
-        // TODO da implementare, versione di prova
-        return "Pinco pallino";
+        return this.name;
     }
 }
