@@ -1,18 +1,19 @@
 package businesslogic.SummarySheet;
 
-import businesslogic.event.Event;
+import businesslogic.CatERing;
 import businesslogic.event.Service;
-import businesslogic.menu.Menu;
+import businesslogic.recipe.ItemBook;
 import businesslogic.user.User;
-import businesslogic.user.UserManager;
+
+
 
 import java.util.*;
 
-import static businesslogic.user.UserManager.getCurrentUser;
+
 
 public class SummarySheetManager {
     private SummarySheet currentSheet;
-    private UserManager userManager;
+
 
     private List<SheetEventReceiver> eventReceivers = new ArrayList<>();
 
@@ -36,26 +37,66 @@ public class SummarySheetManager {
         }
     }
 
-    // Altri metodi di notifica per eventReceivers
-
-    // Operazioni per gestire SummarySheet
-    public SummarySheet createSummarySheet(Service service) {
-        User user = getCurrentUser();
-        if(user.isChef()){
-            SummarySheet sheet = SummarySheet.create(service);
-            notifySheetCreated(sheet);
-            return sheet;
+    private void notifyItemAdded(ItemBook item) {
+        for (SheetEventReceiver receiver : eventReceivers) {
+            receiver.updateItemAdded(currentSheet,item);
         }
-
-
-        return null;
+    }
+    private void notifyItemsRearanged(ItemBook item) {
+        for (SheetEventReceiver receiver : eventReceivers) {
+            receiver.updateExtraTaskRearranged(currentSheet,item);
+        }
     }
 
-    public boolean deleteSheet(SummarySheet sheet) {
+
+    public void createSummarySheet(Service service) {
+        User user = CatERing.getInstance().getUserManager().getCurrentUser();
+        if(user.isChef() && service.isAssignedChef(user) && service.isAssignedMenu()){
+            SummarySheet sheet = new SummarySheet(user);
+            setCurrentSheet(sheet);
+            notifySheetCreated(sheet);
+        }
+    }
+
+    public void deleteSheet(SummarySheet sheet) {
         // Implementazione per eliminare un SummarySheet
         notifySheetDeleted(sheet);
-        return true;
     }
 
-    // Altri metodi per gestire SummarySheet
+    public boolean modifySheet(SummarySheet sheet) {
+        User user = CatERing.getInstance().getUserManager().getCurrentUser();
+        return currentSheet.isOwner(user);
+    }
+
+    public void addPreparationOrRecipe(ItemBook item){
+        User user = CatERing.getInstance().getUserManager().getCurrentUser();
+        if(currentSheet.isOwner(user))currentSheet.addExtraTask(item);
+        notifyItemAdded(item);
+    }
+
+    public void moveRecipePreparation(ItemBook item, ItemBook item2){
+        User user = CatERing.getInstance().getUserManager().getCurrentUser();
+        if(currentSheet.isOwner(user)){
+            currentSheet.moveRecipePreparation(item,item2);
+            notifyItemsRearanged(item);
+        }
+    }
+
+
+    public SummarySheet getCurrentSheet() {
+        return currentSheet;
+    }
+
+    public void setCurrentSheet(SummarySheet currentSheet) {
+        this.currentSheet = currentSheet;
+    }
+
+    public List<SheetEventReceiver> getEventReceivers() {
+        return eventReceivers;
+    }
+
+    public void setEventReceivers(List<SheetEventReceiver> eventReceivers) {
+        this.eventReceivers = eventReceivers;
+    }
+
 }

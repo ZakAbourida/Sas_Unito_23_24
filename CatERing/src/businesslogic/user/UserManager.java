@@ -8,7 +8,7 @@ public class UserManager {
         this.currentUser = new User();
     }
 
-    public static User getCurrentUser() {
+    public  User getCurrentUser() {
         return currentUser;
     }
 }
