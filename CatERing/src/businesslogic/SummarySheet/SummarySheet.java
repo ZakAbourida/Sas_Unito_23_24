@@ -1,9 +1,12 @@
 package businesslogic.SummarySheet;
 
+import businesslogic.Turn.Turn;
 import businesslogic.event.Service;
 import businesslogic.recipe.ItemBook;
+import businesslogic.user.Cook;
 import businesslogic.user.User;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +20,6 @@ public class SummarySheet {
     public void setNote(String note) {
         this.note = note;
     }
-
 
     public SummarySheet(User owner) {
         this.owner = owner;
@@ -53,5 +55,24 @@ public class SummarySheet {
         extraTask.set(index2, item1);
     }
 
-    // Altri metodi per SummarySheet
+    public Assignment createAssignment(Cook cook, Turn turn, ItemBook itemBook) {
+        Assignment asg = new Assignment(cook, turn, itemBook);
+        assignments.add(asg);
+        return asg;
+    }
+
+    public void assignPortion(int portion, Assignment asg) {
+        asg.setPortion(portion);
+    }
+
+    public void assignTime(Time time, Assignment asg) {
+        asg.setTime(time);
+    }
 }
+
+
+
+
+
+
+

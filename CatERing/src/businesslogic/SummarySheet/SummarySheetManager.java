@@ -1,15 +1,16 @@
 package businesslogic.SummarySheet;
 
 import businesslogic.CatERing;
+import businesslogic.Turn.Turn;
+import businesslogic.UseCaseLogicException;
 import businesslogic.event.Service;
 import businesslogic.recipe.ItemBook;
+import businesslogic.user.Cook;
 import businesslogic.user.User;
+import javafx.concurrent.Task;
 
-
-
+import java.sql.Time;
 import java.util.*;
-
-
 
 public class SummarySheetManager {
     private SummarySheet currentSheet;
@@ -39,49 +40,133 @@ public class SummarySheetManager {
 
     private void notifyItemAdded(ItemBook item) {
         for (SheetEventReceiver receiver : eventReceivers) {
-            receiver.updateItemAdded(currentSheet,item);
+            receiver.updateItemAdded(currentSheet, item);
         }
     }
+
     private void notifyItemsRearanged(ItemBook item) {
         for (SheetEventReceiver receiver : eventReceivers) {
-            receiver.updateExtraTaskRearranged(currentSheet,item);
+            receiver.updateExtraTaskRearranged(currentSheet, item);
         }
     }
 
+    private void notifyAssignmentCreated(Assignment asg) {
+        for (SheetEventReceiver receiver : eventReceivers) {
+            receiver.updateAssignmentCreated(currentSheet, asg);
+        }
+    }
 
-    public void createSummarySheet(Service service) {
+    private void notifyPortionAdded(Assignment asg, int portion) {
+        for (SheetEventReceiver receiver : eventReceivers) {
+            receiver.updateAssignmentPortion(asg, portion);
+        }
+    }
+
+    private void notifyTimeAdded(Assignment asg, Time time) {
+        for (SheetEventReceiver receiver : eventReceivers) {
+            receiver.updateAssignmentTime(asg, time);
+        }
+    }
+
+    private void notifyNoteAdded(String note) {
+        for (SheetEventReceiver receiver : eventReceivers) {
+            receiver.updateSummarySheetNotes(currentSheet, note);
+        }
+    }
+
+    public SummarySheet createSummarySheet(Service service) {
         User user = CatERing.getInstance().getUserManager().getCurrentUser();
-        if(user.isChef() && service.isAssignedChef(user) && service.isAssignedMenu()){
+        if (user.isChef() && service.isAssignedChef(user) && service.isAssignedMenu()) {
             SummarySheet sheet = new SummarySheet(user);
+            service.setSheet(sheet);
             setCurrentSheet(sheet);
             notifySheetCreated(sheet);
+            return sheet;
         }
+        //TODO: gestire i casi di errore
+            /*else if(!user.isChef()){
+                throws Object UseCaseLogicException;
+            }*/
+        return null;
     }
 
     public void deleteSheet(SummarySheet sheet) {
-        // Implementazione per eliminare un SummarySheet
-        notifySheetDeleted(sheet);
+        User user = CatERing.getInstance().getUserManager().getCurrentUser();
+        if (sheet.isOwner(user) && sheet.isInProgress()) {
+            notifySheetDeleted(sheet);
+        }
     }
 
     public boolean modifySheet(SummarySheet sheet) {
         User user = CatERing.getInstance().getUserManager().getCurrentUser();
-        return currentSheet.isOwner(user);
+        if (sheet.isOwner(user) && sheet.isInProgress()) {
+            return sheet.isOwner(user);
+        } else return false;
     }
 
-    public void addPreparationOrRecipe(ItemBook item){
+    public void addPreparationOrRecipe(ItemBook item) {
         User user = CatERing.getInstance().getUserManager().getCurrentUser();
-        if(currentSheet.isOwner(user))currentSheet.addExtraTask(item);
-        notifyItemAdded(item);
+        if (currentSheet.isOwner(user)) {
+            currentSheet.addExtraTask(item);
+            notifyItemAdded(item);
+        }
     }
 
-    public void moveRecipePreparation(ItemBook item, ItemBook item2){
+    public void moveRecipePreparation(ItemBook item, ItemBook item2) {
         User user = CatERing.getInstance().getUserManager().getCurrentUser();
-        if(currentSheet.isOwner(user)){
-            currentSheet.moveRecipePreparation(item,item2);
+        if (currentSheet.isOwner(user)) {
+            currentSheet.moveRecipePreparation(item, item2);
             notifyItemsRearanged(item);
         }
     }
 
+    public void createAssignment(Cook cook, Turn turn, ItemBook itemBook){
+        User user = CatERing.getInstance().getUserManager().getCurrentUser();
+        if (currentSheet.isOwner(user)) {
+            Assignment asg = currentSheet.createAssignment(cook, turn, itemBook);
+            notifyAssignmentCreated(asg);
+        }
+    }
+
+    public void modifyCook(Cook cook, Assignment asg){
+        //TODO: da completare alla fine
+    }
+
+    public void modifyTurn(Turn turn, Assignment asg){
+        //TODO: da completare alla fine
+    }
+
+    public void modifyTask(Task task, Assignment asg){
+        //TODO: da completare alla fine
+    }
+
+    public void assignPortion(int portion, Assignment asg){
+        User user = CatERing.getInstance().getUserManager().getCurrentUser();
+        if (currentSheet.isOwner(user)) {
+            currentSheet.assignPortion(portion, asg);
+            notifyPortionAdded(asg, portion);
+        }
+    }
+
+    public void modifyPortion(){
+        //TODO: da completare alla fine
+    }
+
+    public void assignTime(Time time, Assignment asg){
+        User user = CatERing.getInstance().getUserManager().getCurrentUser();
+        if (currentSheet.isOwner(user)) {
+            currentSheet.assignTime(time, asg);
+            notifyTimeAdded(asg, time);
+        }
+    }
+
+    public void writeNote(String note){
+        User user = CatERing.getInstance().getUserManager().getCurrentUser();
+        if (currentSheet.isOwner(user)) {
+            currentSheet.setNote(note);
+            notifyNoteAdded(note);
+        }
+    }
 
     public SummarySheet getCurrentSheet() {
         return currentSheet;
