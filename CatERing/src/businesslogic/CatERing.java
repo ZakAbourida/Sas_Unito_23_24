@@ -1,8 +1,7 @@
 package businesslogic;
 
-import businesslogic.menu.Menu;
 import businesslogic.menu.MenuManager;
-import businesslogic.recipe.RecipeManager;
+import businesslogic.recipe.RecipeBookManager;
 import businesslogic.user.UserManager;
 
 public class CatERing {
@@ -16,12 +15,12 @@ public class CatERing {
     }
 
     private MenuManager menuMgr;
-    private RecipeManager recipeMgr;
+    private RecipeBookManager recipeMgr;
     private UserManager userMgr;
 
     private CatERing() {
         menuMgr = new MenuManager();
-        recipeMgr = new RecipeManager();
+        recipeMgr = new RecipeBookManager();
         userMgr = new UserManager();
     }
 
@@ -30,7 +29,7 @@ public class CatERing {
         return menuMgr;
     }
 
-    public RecipeManager getRecipeManager() {
+    public RecipeBookManager getRecipeManager() {
         return recipeMgr;
     }
 
