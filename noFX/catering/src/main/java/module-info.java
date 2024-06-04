@@ -1,4 +1,5 @@
 module catering {
     requires java.sql;
-    exports catering;
+    exports catering.test.menu;
+    exports catering.test.summarySheet;
 }
