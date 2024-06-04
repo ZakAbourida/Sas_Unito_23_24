@@ -77,7 +77,7 @@ public class SummarySheetManager {
     public SummarySheet createSummarySheet(ServiceInfo service) {
         User user = CatERing.getInstance().getUserManager().getCurrentUser();
         if (user.isChef() && service.isAssignedChef(user) && service.isAssignedMenu()) {
-            SummarySheet sheet = new SummarySheet(user);
+            SummarySheet sheet = new SummarySheet(user,service);
             service.setSheet(sheet);
             setCurrentSheet(sheet);
             notifySheetCreated(sheet);

@@ -3,17 +3,26 @@ package catering.businesslogic.SummarySheet;
 
 
 import catering.businesslogic.Turn.Turn;
+import catering.businesslogic.event.ServiceInfo;
+import catering.businesslogic.menu.Menu;
 import catering.businesslogic.recipe.ItemBook;
 import catering.businesslogic.user.Cook;
 import catering.businesslogic.user.User;
+import catering.persistence.BatchUpdateHandler;
+import catering.persistence.PersistenceManager;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
 public class SummarySheet {
+    private int id;
     private String note;
     private User owner;
+    private Menu menu;
     private List<Assignment> assignments;
     private List<ItemBook> extraTask;
 
@@ -22,10 +31,11 @@ public class SummarySheet {
         this.note = note;
     }
 
-    public SummarySheet(User owner) {
+    public SummarySheet(User owner, ServiceInfo service) {
         this.owner = owner;
         this.assignments = new ArrayList<>();
         this.extraTask = new ArrayList<>();
+        this.menu = service.getMenu(service.getId());
 
     }
 
@@ -68,6 +78,35 @@ public class SummarySheet {
 
     public void assignTime(Time time, Assignment asg) {
         asg.setTime(time);
+    }
+
+    public static void saveNewSummarySheet(SummarySheet sheet) {
+        String summarySheetInsert = "INSERT INTO catering.summarysheet (note, owner, menu) VALUES (?, ?, ?);";
+        int[] result = PersistenceManager.executeBatchUpdate(summarySheetInsert, 1, new BatchUpdateHandler() {
+            @Override
+            public void handleBatchItem(PreparedStatement ps, int batchCount) throws SQLException {
+                ps.setString(1, PersistenceManager.escapeString(sheet.note));
+                ps.setInt(2, sheet.owner.getId());
+                ps.setInt(3, sheet.menu.getId());
+            }
+
+            @Override
+            public void handleGeneratedIds(ResultSet rs, int count) throws SQLException {
+                // should be only one
+                if (count == 0) {
+                    sheet.id = rs.getInt(1);
+                }
+            }
+        });
+
+        if (result[0] > 0) {
+            // Summary sheet inserito correttamente
+            System.out.println("SummarySheet salvato con ID: " + sheet.id);
+        }
+    }
+
+    public int getId() {
+        return id;
     }
 }
 

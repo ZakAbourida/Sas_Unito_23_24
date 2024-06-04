@@ -79,6 +79,46 @@ public class Menu {
 
     }
 
+    public static Menu loadMenuById(int menuId) {
+        if (loadedMenus.containsKey(menuId)) {
+            return loadedMenus.get(menuId);
+        }
+
+        final Menu menu = new Menu();
+        String query = "SELECT * FROM menus WHERE id = " + menuId;
+        PersistenceManager.executeQuery(query, new ResultHandler() {
+            @Override
+            public void handle(ResultSet rs) throws SQLException {
+
+                    menu.id = rs.getInt("id");
+                    menu.title = rs.getString("title");
+                    menu.published = rs.getBoolean("published");
+                    // carica altre proprietà se necessario...
+            }
+        });
+
+        if (menu.id == 0) {
+            return null;
+        }
+
+        // Carica le caratteristiche del menu
+        String featuresQuery = "SELECT * FROM menufeatures WHERE menu_id = " + menu.id;
+        PersistenceManager.executeQuery(featuresQuery, rs -> {
+            while (rs.next()) {
+                menu.featuresMap.put(rs.getString("name"), rs.getBoolean("value"));
+            }
+        });
+
+        // Carica le sezioni del menu
+        menu.sections = Section.loadSectionsFor(menu.id);
+
+        // Carica le voci del menu
+        menu.freeItems = MenuItem.loadItemsFor(menu.id, 0);
+
+        loadedMenus.put(menu.id, menu);
+        return menu;
+    }
+
     public boolean getFeatureValue(String feature) {
         return this.featuresMap.get(feature);
     }
@@ -112,7 +152,7 @@ public class Menu {
     }
 
     public String toString() {
-        return title + " (autore: " + owner.getUserName() + ")," + (published ? " " : " non ") +
+        return title  + (published ? " " : " non ") +
                 "pubblicato," + (inUse ? " " : " non ") + "in uso";
     }
 

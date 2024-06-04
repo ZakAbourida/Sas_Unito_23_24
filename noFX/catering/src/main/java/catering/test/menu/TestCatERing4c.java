@@ -1,4 +1,4 @@
-package catering;
+package catering.test.menu;
 import catering.businesslogic.CatERing;
 import catering.businesslogic.UseCaseLogicException;
 import catering.businesslogic.menu.Menu;

@@ -11,6 +11,7 @@ public class SheetPersistence implements SheetEventReceiver {
 
     @Override
     public void updateSheetCreated(SummarySheet sheet) {
+        SummarySheet.saveNewSummarySheet(sheet);
     }
 
     @Override
