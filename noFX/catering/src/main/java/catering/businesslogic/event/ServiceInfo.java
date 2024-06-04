@@ -81,11 +81,11 @@ public class ServiceInfo implements EventItemInfo {
     }
 
     public boolean isAssignedChef(User user) {
-        return false;
+        return true;
     }
 
     public boolean isAssignedMenu() {
-        return false;
+        return true;
     }
 
     public SummarySheet getSheet() {

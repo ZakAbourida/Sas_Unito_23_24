@@ -1,10 +1,12 @@
 package catering.businesslogic;
 
+import catering.businesslogic.SummarySheet.SummarySheetManager;
 import catering.businesslogic.event.EventManager;
 import catering.businesslogic.menu.MenuManager;
 import catering.businesslogic.recipe.RecipeManager;
 import catering.businesslogic.user.UserManager;
 import catering.persistence.MenuPersistence;
+import catering.persistence.SheetPersistence;
 
 public class CatERing {
     private static CatERing singleInstance;
@@ -20,8 +22,10 @@ public class CatERing {
     private RecipeManager recipeMgr;
     private UserManager userMgr;
     private EventManager eventMgr;
+    private SummarySheetManager sheetMgr;
 
     private MenuPersistence menuPersistence;
+     private SheetPersistence sheetPersistence;
 
     private CatERing() {
         menuMgr = new MenuManager();
@@ -29,7 +33,10 @@ public class CatERing {
         userMgr = new UserManager();
         eventMgr = new EventManager();
         menuPersistence = new MenuPersistence();
+        sheetMgr = new SummarySheetManager();
+        sheetPersistence = new SheetPersistence();
         menuMgr.addEventReceiver(menuPersistence);
+        sheetMgr.addReceiver(sheetPersistence);
     }
 
 
@@ -46,5 +53,7 @@ public class CatERing {
     }
 
     public EventManager getEventManager() { return eventMgr; }
+
+    public SummarySheetManager getSummarySheetManager(){ return sheetMgr;}
 
 }

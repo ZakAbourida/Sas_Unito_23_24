@@ -5,12 +5,13 @@ import catering.businesslogic.SummarySheet.SheetEventReceiver;
 import catering.businesslogic.SummarySheet.SummarySheet;
 import catering.businesslogic.recipe.ItemBook;
 
+import java.sql.SQLException;
 import java.sql.Time;
 
 public class SheetPersistence implements SheetEventReceiver {
 
     @Override
-    public void updateSheetCreated(SummarySheet sheet) {
+    public void updateSheetCreated(SummarySheet sheet){
         SummarySheet.saveNewSummarySheet(sheet);
     }
 

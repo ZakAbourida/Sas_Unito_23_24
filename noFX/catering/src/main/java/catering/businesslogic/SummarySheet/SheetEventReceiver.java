@@ -4,6 +4,7 @@ package catering.businesslogic.SummarySheet;
 
 import catering.businesslogic.recipe.ItemBook;
 
+import java.sql.SQLException;
 import java.sql.Time;
 
 public interface SheetEventReceiver {

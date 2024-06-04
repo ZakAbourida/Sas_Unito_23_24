@@ -9,6 +9,7 @@ import catering.businesslogic.recipe.ItemBook;
 import catering.businesslogic.user.Cook;
 import catering.businesslogic.user.User;
 
+import java.sql.SQLException;
 import java.sql.Time;
 import java.util.*;
 
@@ -26,7 +27,7 @@ public class SummarySheetManager {
         eventReceivers.remove(receiver);
     }
 
-    public void notifySheetCreated(SummarySheet sheet) {
+    public void notifySheetCreated(SummarySheet sheet) throws SQLException {
         for (SheetEventReceiver receiver : eventReceivers) {
             receiver.updateSheetCreated(sheet);
         }
@@ -74,7 +75,7 @@ public class SummarySheetManager {
         }
     }
 
-    public SummarySheet createSummarySheet(ServiceInfo service) {
+    public SummarySheet createSummarySheet(ServiceInfo service) throws SQLException {
         User user = CatERing.getInstance().getUserManager().getCurrentUser();
         if (user.isChef() && service.isAssignedChef(user) && service.isAssignedMenu()) {
             SummarySheet sheet = new SummarySheet(user,service);
@@ -92,14 +93,14 @@ public class SummarySheetManager {
 
     public void deleteSheet(SummarySheet sheet) {
         User user = CatERing.getInstance().getUserManager().getCurrentUser();
-        if (sheet.isOwner(user) && sheet.isInProgress()) {
+        if (sheet.isOwner(user) && !sheet.isInProgress()) {
             notifySheetDeleted(sheet);
         }
     }
 
     public boolean modifySheet(SummarySheet sheet) {
         User user = CatERing.getInstance().getUserManager().getCurrentUser();
-        if (sheet.isOwner(user) && sheet.isInProgress()) {
+        if (sheet.isOwner(user) && !sheet.isInProgress()) {
             return sheet.isOwner(user);
         } else return false;
     }

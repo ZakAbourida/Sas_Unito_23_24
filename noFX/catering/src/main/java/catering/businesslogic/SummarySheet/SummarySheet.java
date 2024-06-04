@@ -23,6 +23,8 @@ public class SummarySheet {
     private String note;
     private User owner;
     private Menu menu;
+
+    private ServiceInfo service;
     private List<Assignment> assignments;
     private List<ItemBook> extraTask;
 
@@ -36,17 +38,16 @@ public class SummarySheet {
         this.assignments = new ArrayList<>();
         this.extraTask = new ArrayList<>();
         this.menu = service.getMenu(service.getId());
+        this.service = service;
 
     }
 
     public boolean isInProgress() {
-        // Implementazione della logica per verificare se è in corso
         return false;
     }
 
     public boolean isOwner(User user) {
-        // Implementazione della logica per verificare se l'utente è il proprietario
-        return false;
+        return true;
     }
 
     public void addExtraTask(ItemBook itemBook) {
@@ -81,28 +82,54 @@ public class SummarySheet {
     }
 
     public static void saveNewSummarySheet(SummarySheet sheet) {
-        String summarySheetInsert = "INSERT INTO catering.summarysheet (note, owner, menu) VALUES (?, ?, ?);";
-        int[] result = PersistenceManager.executeBatchUpdate(summarySheetInsert, 1, new BatchUpdateHandler() {
+        String query = "INSERT INTO summarysheet (note, owner, service_id, menu) VALUES (?, ?, ?, ?)";
+        int[] result = PersistenceManager.executeBatchUpdate(query, 1, new BatchUpdateHandler() {
             @Override
             public void handleBatchItem(PreparedStatement ps, int batchCount) throws SQLException {
-                ps.setString(1, PersistenceManager.escapeString(sheet.note));
+                String escapedNote = sheet.note != null ? PersistenceManager.escapeString(sheet.note) : "";
+                ps.setString(1, escapedNote);
                 ps.setInt(2, sheet.owner.getId());
-                ps.setInt(3, sheet.menu.getId());
+                ps.setInt(3, sheet.service.getId());
+                ps.setInt(4, sheet.menu != null ? sheet.menu.getId() : 0);
             }
 
             @Override
             public void handleGeneratedIds(ResultSet rs, int count) throws SQLException {
-                // should be only one
-                if (count == 0) {
+                if (rs.next()) {
                     sheet.id = rs.getInt(1);
                 }
             }
         });
 
         if (result[0] > 0) {
-            // Summary sheet inserito correttamente
-            System.out.println("SummarySheet salvato con ID: " + sheet.id);
+            // Salva assegnazioni e compiti extra, se presenti
+            // ...
         }
+    }
+
+    public String testString() {
+        StringBuilder result = new StringBuilder();
+        result.append("Owner: ").append(owner.getUserName()).append("\n");
+
+        result.append("Menu:\n");
+        Menu associatedMenu = service.getMenu(service.getId());
+        if (associatedMenu != null) {
+            result.append(associatedMenu.testString()).append("\n");
+        }
+
+        result.append("Assignments:\n");
+        for (Assignment a : assignments) {
+            result.append(a.toString()).append("\n");
+        }
+
+        result.append("Extra Tasks:\n");
+        for (ItemBook ib : extraTask) {
+            result.append(ib.toString()).append("\n");
+        }
+
+        result.append("Note: ").append(note).append("\n");
+
+        return result.toString();
     }
 
     public int getId() {
