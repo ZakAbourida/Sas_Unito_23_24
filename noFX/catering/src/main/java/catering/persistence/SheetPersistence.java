@@ -3,9 +3,9 @@ package catering.persistence;
 import catering.businesslogic.SummarySheet.Assignment;
 import catering.businesslogic.SummarySheet.SheetEventReceiver;
 import catering.businesslogic.SummarySheet.SummarySheet;
+import catering.businesslogic.SummarySheet.SummarySheetManager;
 import catering.businesslogic.recipe.ItemBook;
 
-import java.sql.SQLException;
 import java.sql.Time;
 
 public class SheetPersistence implements SheetEventReceiver {
@@ -17,6 +17,7 @@ public class SheetPersistence implements SheetEventReceiver {
 
     @Override
     public void updateSheetDeleted(SummarySheet sheet) {
+        SummarySheet.deleteSheet(sheet);
     }
 
     @Override
@@ -42,5 +43,6 @@ public class SheetPersistence implements SheetEventReceiver {
     @Override
     public void updateSummarySheetNotes(SummarySheet sheet, String notes) {
     }
+
 
 }

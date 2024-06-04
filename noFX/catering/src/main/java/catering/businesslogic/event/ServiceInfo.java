@@ -80,6 +80,30 @@ public class ServiceInfo implements EventItemInfo {
         return this.menu;
     }
 
+    public static ServiceInfo loadServiceInfoById(int id) {
+        final ServiceInfo[] service = {null};
+        String query = "SELECT * FROM Services WHERE id = " + id;
+        PersistenceManager.executeQuery(query, new ResultHandler() {
+            @Override
+            public void handle(ResultSet rs) throws SQLException {
+                if (rs.next()) {
+                    service[0] = new ServiceInfo(rs.getString("name"));
+                    service[0].id = rs.getInt("id");
+                    service[0].date = rs.getDate("service_date");
+                    service[0].timeStart = rs.getTime("time_start");
+                    service[0].timeEnd = rs.getTime("time_end");
+                    service[0].participants = rs.getInt("expected_participants");
+                    int menuId = rs.getInt("proposed_menu_id");
+                    if (menuId > 0) {
+                        service[0].menu = Menu.loadMenuById(menuId);
+                    }
+                }
+            }
+        });
+        return service[0];
+    }
+
+
     public boolean isAssignedChef(User user) {
         return true;
     }

@@ -16,4 +16,5 @@ public interface SheetEventReceiver {
     void updateAssignmentPortion(Assignment asg, int portion);
     void updateAssignmentTime(Assignment asg, Time time);
     void updateSummarySheetNotes(SummarySheet currentSheet, String note);
+
 }

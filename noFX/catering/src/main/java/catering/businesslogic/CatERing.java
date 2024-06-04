@@ -1,5 +1,6 @@
 package catering.businesslogic;
 
+import catering.businesslogic.SummarySheet.SummarySheet;
 import catering.businesslogic.SummarySheet.SummarySheetManager;
 import catering.businesslogic.event.EventManager;
 import catering.businesslogic.menu.MenuManager;
@@ -7,6 +8,8 @@ import catering.businesslogic.recipe.RecipeManager;
 import catering.businesslogic.user.UserManager;
 import catering.persistence.MenuPersistence;
 import catering.persistence.SheetPersistence;
+
+import java.util.List;
 
 public class CatERing {
     private static CatERing singleInstance;
@@ -56,4 +59,7 @@ public class CatERing {
 
     public SummarySheetManager getSummarySheetManager(){ return sheetMgr;}
 
+    public List<SummarySheet> loadAllSummarySheets() {
+        return SummarySheet.loadAllSummarySheets();
+    }
 }

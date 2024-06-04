@@ -75,6 +75,8 @@ public class SummarySheetManager {
         }
     }
 
+
+
     public SummarySheet createSummarySheet(ServiceInfo service) throws SQLException {
         User user = CatERing.getInstance().getUserManager().getCurrentUser();
         if (user.isChef() && service.isAssignedChef(user) && service.isAssignedMenu()) {
@@ -167,6 +169,10 @@ public class SummarySheetManager {
             currentSheet.setNote(note);
             notifyNoteAdded(note);
         }
+    }
+
+    public List<SummarySheet> loadAllSummarySheets() {
+        return SummarySheet.loadAllSummarySheets();
     }
 
     public SummarySheet getCurrentSheet() {

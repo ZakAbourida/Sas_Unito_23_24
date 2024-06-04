@@ -9,9 +9,6 @@ public class PersistenceManager {
     private static String username = "root";
     private static String password = "root";
 
-    // Usare la seguente stringa per connettersi a un database PostgreSQL
-    // private static String url = String.format("jdbc:postgresql://localhost/catering?ssl=true");
-
     private static int lastId;
 
     public static String escapeString(String input) {
@@ -86,6 +83,19 @@ public class PersistenceManager {
             } else {
                 lastId = 0;
             }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return result;
+    }
+
+    // Aggiungi questo metodo per gestire gli aggiornamenti con un UpdateHandler
+    public static int executeUpdate(String query, UpdateHandler handler) {
+        int result = 0;
+        try (Connection conn = DriverManager.getConnection(url, username, password);
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            handler.handleUpdate(ps);
+            result = ps.executeUpdate();
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
