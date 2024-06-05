@@ -12,7 +12,7 @@ public class TableTurns {
     private List<Turn> turns = new ArrayList<>();
 
     public Turn createTurn(ServiceInfo service) {
-        Turn turn = new Turn(service);
+        Turn turn = new Turn();
         turns.add(turn);
         return turn;
     }

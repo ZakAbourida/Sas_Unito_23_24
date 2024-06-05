@@ -9,7 +9,7 @@ public class RoomTurn extends Turn {
     private Date deadline;
 
     public RoomTurn(ServiceInfo service) {
-        super(service);
+        super();
     }
 
     public Date getDeadline() {

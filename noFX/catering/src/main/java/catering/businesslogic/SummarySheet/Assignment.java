@@ -2,6 +2,7 @@ package catering.businesslogic.SummarySheet;
 
 import catering.businesslogic.Turn.Turn;
 import catering.businesslogic.recipe.ItemBook;
+import catering.businesslogic.recipe.Recipe;
 import catering.businesslogic.user.User;
 
 import java.sql.Time;
@@ -10,23 +11,20 @@ public class Assignment {
     private int id;
     private User cook;
     private Turn turn;
-    private ItemBook itemBook;
+    private ItemBook item;
     private int portion;
     private Time startTime;
 
-    public Assignment(User cook, Turn turn, ItemBook itemBook) {
+    public Assignment(User cook, Turn turn, ItemBook item) {
         this.cook = cook;
         this.turn = turn;
-        this.itemBook = itemBook;
+        this.item = item;
     }
 
-    public static Assignment create(User cook, Turn turn, ItemBook itemBook) {
-        return new Assignment(cook, turn, itemBook);
-    }
 
     @Override
     public String toString() {
-        return "Assignment ID: " + id + ", Cook: " + cook.getUserName() + ", Turn: " + turn.toString() + ", Item: " + itemBook.toString() + ", Portion: " + portion + ", Time: " + startTime;
+        return "Assignment ID: " + id + ", Cook: " + cook.getUserName() + ", Turn: " + turn.toString() + ", Item: " + item.toString() + ", Portion: " + portion + ", Time: " + startTime;
     }
 
     public void setPortion(int portion) {
@@ -37,31 +35,43 @@ public class Assignment {
         this.startTime = startTime;
     }
 
-    public User getCook() {
-        return cook;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public void setCook(User cook) {
         this.cook = cook;
     }
 
+    public void setTurn(Turn turn) {
+        this.turn = turn;
+    }
+
+    public void setTask(ItemBook item) {
+        this.item = item;
+    }
+
     public int getId() {
         return id;
+    }
+
+    public User getCook() {
+        return cook;
     }
 
     public Turn getTurn() {
         return turn;
     }
 
-    public ItemBook getItemBook() {
-        return itemBook;
+    public ItemBook getRecipe() {
+        return item;
     }
 
     public int getPortion() {
         return portion;
     }
 
-    public Time getStartTime() {
+    public Time getTime() {
         return startTime;
     }
 }

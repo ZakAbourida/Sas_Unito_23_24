@@ -6,6 +6,7 @@ import catering.businesslogic.CatERing;
 import catering.businesslogic.Turn.Turn;
 import catering.businesslogic.event.ServiceInfo;
 import catering.businesslogic.recipe.ItemBook;
+import catering.businesslogic.recipe.Recipe;
 import catering.businesslogic.user.Cook;
 import catering.businesslogic.user.User;
 
@@ -39,13 +40,13 @@ public class SummarySheetManager {
         }
     }
 
-    private void notifyItemAdded(ItemBook item) {
+    private void notifyItemAdded(List<Recipe> items) {
         for (SheetEventReceiver receiver : eventReceivers) {
-            receiver.updateItemAdded(currentSheet, item);
+            receiver.updateItemAdded(currentSheet, items);
         }
     }
 
-    private void notifyItemsRearanged(ItemBook item) {
+    private void notifyItemsRearranged(Recipe item) {
         for (SheetEventReceiver receiver : eventReceivers) {
             receiver.updateExtraTaskRearranged(currentSheet, item);
         }
@@ -72,6 +73,24 @@ public class SummarySheetManager {
     private void notifyNoteAdded(String note) {
         for (SheetEventReceiver receiver : eventReceivers) {
             receiver.updateSummarySheetNotes(currentSheet, note);
+        }
+    }
+
+    private void notifyCookModified(Cook cook, Assignment asg) {
+        for (SheetEventReceiver receiver : eventReceivers) {
+            receiver.updateCookInAssignment(asg);
+        }
+    }
+
+    private void notifyNewTurnInAssignment(Turn turn, Assignment asg) {
+        for (SheetEventReceiver receiver : eventReceivers) {
+            receiver.updateTurnInAssignment(asg);
+        }
+    }
+
+    private void notifyItemModified(ItemBook task, Assignment asg) {
+        for (SheetEventReceiver receiver : eventReceivers) {
+            receiver.updateItemModified(task, asg);
         }
     }
 
@@ -107,40 +126,45 @@ public class SummarySheetManager {
         } else return false;
     }
 
-    public void addPreparationOrRecipe(ItemBook item) {
+    public void addPreparationOrRecipe(Recipe item) {
         User user = CatERing.getInstance().getUserManager().getCurrentUser();
         if (currentSheet.isOwner(user)) {
-            currentSheet.addExtraTask(item);
-            notifyItemAdded(item);
+            List<Recipe> items = new ArrayList<>();
+            items.add(item);
+            SummarySheet.addItem(currentSheet, items);
+            notifyItemAdded(items);
         }
     }
-
-    public void moveRecipePreparation(ItemBook item, ItemBook item2) {
+    /*
+    public void moveRecipePreparation(Recipe item, ItemBook item2) {
         User user = CatERing.getInstance().getUserManager().getCurrentUser();
         if (currentSheet.isOwner(user)) {
             currentSheet.moveRecipePreparation(item, item2);
             notifyItemsRearanged(item);
         }
     }
-
-    public void createAssignment(Cook cook, Turn turn, ItemBook itemBook){
+    */
+    public void createAssignment(Cook cook, Turn turn, ItemBook item){
         User user = CatERing.getInstance().getUserManager().getCurrentUser();
         if (currentSheet.isOwner(user)) {
-            Assignment asg = currentSheet.createAssignment(cook, turn, itemBook);
+            Assignment asg = currentSheet.createAssignment(cook, turn, item);
             notifyAssignmentCreated(asg);
         }
     }
 
     public void modifyCook(Cook cook, Assignment asg){
-        //TODO: da completare alla fine
+        currentSheet.setNewCook(cook,asg);
+        notifyCookModified(cook,asg);
     }
 
     public void modifyTurn(Turn turn, Assignment asg){
-        //TODO: da completare alla fine
+        currentSheet.setNewTurn(turn,asg);
+        notifyNewTurnInAssignment(turn,asg);
     }
 
     public void modifyTask(ItemBook task, Assignment asg){
-        //TODO: da completare alla fine
+        currentSheet.setNewItem(task,asg);
+        notifyItemModified(task,asg);
     }
 
     public void assignPortion(int portion, Assignment asg){
@@ -169,10 +193,6 @@ public class SummarySheetManager {
             currentSheet.setNote(note);
             notifyNoteAdded(note);
         }
-    }
-
-    public List<SummarySheet> loadAllSummarySheets() {
-        return SummarySheet.loadAllSummarySheets();
     }
 
     public SummarySheet getCurrentSheet() {

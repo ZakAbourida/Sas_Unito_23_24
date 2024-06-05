@@ -52,7 +52,7 @@ public class TurnManager {
     }
     // Operation methods
     public Turn createTurn(ServiceInfo service) {
-        Turn turn = new Turn(service);
+        Turn turn = new Turn();
         notifyTurnCreated(turn);
         return turn;
     }

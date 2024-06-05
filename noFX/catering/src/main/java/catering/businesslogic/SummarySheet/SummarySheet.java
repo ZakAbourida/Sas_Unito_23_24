@@ -4,6 +4,7 @@ import catering.businesslogic.Turn.Turn;
 import catering.businesslogic.event.ServiceInfo;
 import catering.businesslogic.menu.Menu;
 import catering.businesslogic.recipe.ItemBook;
+import catering.businesslogic.recipe.Recipe;
 import catering.businesslogic.user.Cook;
 import catering.businesslogic.user.User;
 import catering.persistence.BatchUpdateHandler;
@@ -25,12 +26,14 @@ public class SummarySheet {
     private Menu menu;
     private ServiceInfo service;
     private List<Assignment> assignments;
-    private List<ItemBook> extraTask;
+    private List<Recipe> extraTask;
 
     public SummarySheet() {
         this.assignments = new ArrayList<>();
-        this.extraTask = new ArrayList<>();
+        this.extraTask = new ArrayList<Recipe>();
     }
+
+
 
     public void setNote(String note) {
         this.note = note;
@@ -51,11 +54,13 @@ public class SummarySheet {
         return true;
     }
 
-    public void addExtraTask(ItemBook itemBook) {
-        this.extraTask.add(itemBook);
+    public void addExtraTask(Recipe item) {
+        if (!this.extraTask.contains(item)) {
+            this.extraTask.add(item);
+        }
     }
-
-    public void moveRecipePreparation(ItemBook item1, ItemBook item2) {
+    /*
+    public void moveRecipePreparation(Recipe item1, ItemBook item2) {
         int index1 = extraTask.indexOf(item1);
         int index2 = extraTask.indexOf(item2);
 
@@ -67,7 +72,7 @@ public class SummarySheet {
         extraTask.set(index1, item2);
         extraTask.set(index2, item1);
     }
-
+    */
     public Assignment createAssignment(Cook cook, Turn turn, ItemBook itemBook) {
         Assignment asg = new Assignment(cook, turn, itemBook);
         assignments.add(asg);
@@ -80,6 +85,16 @@ public class SummarySheet {
 
     public void assignTime(Time time, Assignment asg) {
         asg.setTime(time);
+    }
+
+    public void setNewCook(Cook cook, Assignment asg) {
+        asg.setCook(cook);
+    }
+    public void setNewTurn(Turn turn, Assignment asg) {
+        asg.setTurn(turn);
+    }
+    public void setNewItem(ItemBook task, Assignment asg) {
+        asg.setTask(task);
     }
 
 
@@ -120,22 +135,36 @@ public class SummarySheet {
         });
     }
 
-    public static SummarySheet loadSummarySheetById(int id) {
-        final SummarySheet[] sheet = {null};
-        String query = "SELECT * FROM summarysheet WHERE id = " + id;
-        PersistenceManager.executeQuery(query, new ResultHandler() {
+    public static void addItem(SummarySheet sheet, List<Recipe> items) {
+        String query = "INSERT INTO extratask (task, sheet) VALUES (?, ?)";
+        int[] result = PersistenceManager.executeBatchUpdate(query, items.size(), new BatchUpdateHandler() {
             @Override
-            public void handle(ResultSet rs) throws SQLException {
-                if (rs.next()) {
-                    sheet[0] = new SummarySheet(User.loadUserById(rs.getInt("owner")), ServiceInfo.loadServiceInfoById(rs.getInt("service_id")));
-                    sheet[0].setNote(rs.getString("note"));
-                    sheet[0].id = rs.getInt("id");
-                    // Carica altri dettagli del foglio riepilogativo se necessario...
-                }
+            public void handleBatchItem(PreparedStatement ps, int batchCount) throws SQLException {
+                Recipe item = items.get(batchCount);
+                ps.setInt(1, item.getId());
+                ps.setInt(2, sheet.getId());
+            }
+
+            @Override
+            public void handleGeneratedIds(ResultSet rs, int count) throws SQLException {
+                // Non ci sono ID generati da gestire per questi inserimenti
             }
         });
-        return sheet[0];
+
+        if (result.length == items.size()) {
+            for (Recipe item : items) {
+                sheet.addExtraTask(item); // Usa il metodo aggiornato
+            }
+            System.out.println("Tutti gli extra task sono stati aggiunti al SummarySheet con ID: " + sheet.getId());
+        } else {
+            System.out.println("Errore durante l'aggiunta degli extra task al SummarySheet.");
+        }
     }
+
+    public static void saveNewAssignment(SummarySheet sheet, Assignment assignment) {
+        //TODO: Persistence for new assignment in summarysheet
+    }
+
 
     public static List<SummarySheet> loadAllSummarySheets() {
         List<SummarySheet> sheets = new ArrayList<>();
@@ -150,13 +179,35 @@ public class SummarySheet {
                     sheet.owner = User.loadUserById(rs.getInt("owner"));
                     sheet.service = ServiceInfo.loadServiceInfoById(rs.getInt("service_id"));
                     sheet.menu = Menu.loadMenuById(rs.getInt("menu"));
-                    // assignments e extraTask non caricate qui
                     sheets.add(sheet);
                 }
             }
         });
         return sheets;
     }
+
+
+    public static List<SummarySheet> loadAllSummarySheetsForService(int serviceId) {
+        List<SummarySheet> sheets = new ArrayList<>();
+        String query = "SELECT * FROM summarysheet WHERE service_id = " + serviceId;
+        PersistenceManager.executeQuery(query, new ResultHandler() {
+            @Override
+            public void handle(ResultSet rs) throws SQLException {
+                while (rs.next()) {
+                    SummarySheet sheet = new SummarySheet();
+                    sheet.id = rs.getInt("id");
+                    sheet.note = rs.getString("note");
+                    sheet.owner = User.loadUserById(rs.getInt("owner"));
+                    sheet.service = ServiceInfo.loadServiceInfoById(rs.getInt("service_id"));
+                    sheet.menu = Menu.loadMenuById(rs.getInt("menu"));
+                    sheets.add(sheet);
+                }
+            }
+        });
+        return sheets;
+    }
+
+
 
     public String testString() {
         StringBuilder result = new StringBuilder();
@@ -180,7 +231,7 @@ public class SummarySheet {
 
         result.append("Extra Tasks:\n");
         if (extraTask != null) {
-            for (ItemBook ib : extraTask) {
+            for (Recipe ib : extraTask) {
                 result.append(ib != null ? ib.toString() : "N/A").append("\n");
             }
         }
@@ -190,5 +241,13 @@ public class SummarySheet {
 
     public int getId() {
         return id;
+    }
+
+    public List<Assignment> getAssignments() {
+        return assignments;
+    }
+
+    public List<Recipe> getExtraTask() {
+        return extraTask;
     }
 }

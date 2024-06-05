@@ -6,6 +6,6 @@ import catering.businesslogic.event.ServiceInfo;
 public class KitchenTurn extends Turn {
 
     public KitchenTurn(ServiceInfo service) {
-        super(service);
+        super();
     }
 }

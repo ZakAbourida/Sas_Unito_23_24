@@ -4,6 +4,7 @@ import catering.businesslogic.SummarySheet.SummarySheet;
 import catering.businesslogic.SummarySheet.SummarySheetManager;
 import catering.businesslogic.event.EventManager;
 import catering.businesslogic.menu.MenuManager;
+import catering.businesslogic.recipe.Recipe;
 import catering.businesslogic.recipe.RecipeManager;
 import catering.businesslogic.user.UserManager;
 import catering.persistence.MenuPersistence;
@@ -28,7 +29,7 @@ public class CatERing {
     private SummarySheetManager sheetMgr;
 
     private MenuPersistence menuPersistence;
-     private SheetPersistence sheetPersistence;
+    private SheetPersistence sheetPersistence;
 
     private CatERing() {
         menuMgr = new MenuManager();
@@ -42,7 +43,6 @@ public class CatERing {
         sheetMgr.addReceiver(sheetPersistence);
     }
 
-
     public MenuManager getMenuManager() {
         return menuMgr;
     }
@@ -55,11 +55,23 @@ public class CatERing {
         return userMgr;
     }
 
-    public EventManager getEventManager() { return eventMgr; }
+    public EventManager getEventManager() {
+        return eventMgr;
+    }
 
-    public SummarySheetManager getSummarySheetManager(){ return sheetMgr;}
+    public SummarySheetManager getSummarySheetManager() {
+        return sheetMgr;
+    }
 
     public List<SummarySheet> loadAllSummarySheets() {
         return SummarySheet.loadAllSummarySheets();
+    }
+
+    public List<SummarySheet> loadAllSummarySheetsForService(int serviceId) {
+        return SummarySheet.loadAllSummarySheetsForService(serviceId);
+    }
+
+    public List<Recipe> loadAllRecipes() {
+        return Recipe.loadAllRecipes();
     }
 }
