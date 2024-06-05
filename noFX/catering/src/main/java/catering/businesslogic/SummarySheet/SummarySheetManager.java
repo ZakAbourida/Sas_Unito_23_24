@@ -131,7 +131,6 @@ public class SummarySheetManager {
         if (currentSheet.isOwner(user)) {
             List<Recipe> items = new ArrayList<>();
             items.add(item);
-            SummarySheet.addItem(currentSheet, items);
             notifyItemAdded(items);
         }
     }
