@@ -24,4 +24,6 @@ public interface SheetEventReceiver {
     void updateTurnInAssignment(Assignment asg, Turn turn);
 
     void updateItemModified(Recipe task, Assignment asg);
+
+    void updateAssignmentDeleted(Assignment asg);
 }

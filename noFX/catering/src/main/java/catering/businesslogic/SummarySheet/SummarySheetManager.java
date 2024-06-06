@@ -41,6 +41,12 @@ public class SummarySheetManager {
         }
     }
 
+    private void notifyAssignmentDeleted(Assignment asg) {
+        for (SheetEventReceiver receiver : eventReceivers) {
+            receiver.updateAssignmentDeleted(asg);
+        }
+    }
+
     private void notifyItemAdded(List<Recipe> items) {
         for (SheetEventReceiver receiver : eventReceivers) {
             receiver.updateItemAdded(currentSheet, items);
@@ -119,6 +125,13 @@ public class SummarySheetManager {
         User user = CatERing.getInstance().getUserManager().getCurrentUser();
         if (sheet.isOwner(user) && !sheet.isInProgress()) {
             notifySheetDeleted(sheet);
+        }
+    }
+
+    public void deleteAssignment(Assignment asg) {
+        User user = CatERing.getInstance().getUserManager().getCurrentUser();
+        if (currentSheet.isOwner(user) && !currentSheet.isInProgress()) {
+            notifyAssignmentDeleted(asg);
         }
     }
 
