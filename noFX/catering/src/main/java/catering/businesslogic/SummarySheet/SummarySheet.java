@@ -31,8 +31,6 @@ public class SummarySheet {
         this.extraTask = new ArrayList<>();
     }
 
-
-
     public void setNote(String note) {
         this.note = note;
     }
@@ -59,8 +57,8 @@ public class SummarySheet {
     }
 
     public void moveRecipePreparation(Recipe item, int pos) {
-            extraTask.remove(item);
-            extraTask.add(pos, item);
+        extraTask.remove(item);
+        extraTask.add(pos, item);
     }
 
     public Assignment createAssignment(Cook cook, Turn turn, Recipe item) {
@@ -80,9 +78,11 @@ public class SummarySheet {
     public void setNewCook(Cook cook, Assignment asg) {
         asg.setCook(cook);
     }
+
     public void setNewTurn(Turn turn, Assignment asg) {
         asg.setTurn(turn);
     }
+
     public void setNewItem(Recipe task, Assignment asg) {
         asg.setTask(task);
     }
@@ -249,7 +249,6 @@ public class SummarySheet {
         asg.setTurn(turn);
     }
 
-
     public static void modifyTaskInAssignment(Assignment asg, Recipe task) {
         String query = "UPDATE assignment SET recipe = ? WHERE id = ?";
         PersistenceManager.executeUpdate(query, new UpdateHandler() {
@@ -292,7 +291,6 @@ public class SummarySheet {
         return sheets;
     }
 
-
     public static List<SummarySheet> loadAllSummarySheetsForService(int serviceId) {
         List<SummarySheet> sheets = new ArrayList<>();
         String query = "SELECT * FROM summarysheet WHERE service_id = " + serviceId;
@@ -312,8 +310,6 @@ public class SummarySheet {
         });
         return sheets;
     }
-
-
 
     public String testString() {
         StringBuilder result = new StringBuilder();

@@ -1,7 +1,5 @@
 package catering.businesslogic.SummarySheet;
 
-
-
 import catering.businesslogic.CatERing;
 import catering.businesslogic.Turn.Turn;
 import catering.businesslogic.UseCaseLogicException;
@@ -85,13 +83,13 @@ public class SummarySheetManager {
 
     private void notifyCookModified(Assignment asg, Cook cook) {
         for (SheetEventReceiver receiver : eventReceivers) {
-            receiver.updateCookInAssignment(asg,cook);
+            receiver.updateCookInAssignment(asg, cook);
         }
     }
 
     private void notifyNewTurnInAssignment(Assignment asg, Turn turn) {
         for (SheetEventReceiver receiver : eventReceivers) {
-            receiver.updateTurnInAssignment(asg,turn);
+            receiver.updateTurnInAssignment(asg, turn);
         }
     }
 
@@ -101,11 +99,11 @@ public class SummarySheetManager {
         }
     }
 
-    private void notifyItemsRearanged(Recipe item) {
-        //TODO: da finire
+    private void notifyItemsRearanged(SummarySheet sheet) {
+        for (SheetEventReceiver receiver : eventReceivers) {
+            receiver.updateSectionsRearranged(sheet);
+        }
     }
-
-
 
 
     public SummarySheet createSummarySheet(ServiceInfo service) throws SQLException, UseCaseLogicException {
@@ -150,7 +148,7 @@ public class SummarySheetManager {
             List<Recipe> items = new ArrayList<>();
             items.add(item);
             notifyItemAdded(items);
-        }else {
+        } else {
             throw new UseCaseLogicException();
         }
     }
@@ -159,8 +157,8 @@ public class SummarySheetManager {
         User user = CatERing.getInstance().getUserManager().getCurrentUser();
         if (currentSheet.isOwner(user)) {
             currentSheet.moveRecipePreparation(item, pos);
-            notifyItemsRearanged(item);
-        }else{
+            notifyItemsRearanged(currentSheet);
+        } else {
             throw new UseCaseLogicException();
         }
     }
@@ -170,27 +168,27 @@ public class SummarySheetManager {
         if (currentSheet.isOwner(user)) {
             Assignment asg = currentSheet.createAssignment(cook, turn, item);
             notifyAssignmentCreated(asg);
-        }else{
+        } else {
             throw new UseCaseLogicException();
         }
     }
 
     public void modifyCook(Cook cook, Assignment asg) throws UseCaseLogicException {
         modifySheet(currentSheet);
-        currentSheet.setNewCook(cook,asg);
-        notifyCookModified(asg,cook);
+        currentSheet.setNewCook(cook, asg);
+        notifyCookModified(asg, cook);
     }
 
     public void modifyTurn(Turn turn, Assignment asg) throws UseCaseLogicException {
         modifySheet(currentSheet);
-        currentSheet.setNewTurn(turn,asg);
+        currentSheet.setNewTurn(turn, asg);
         notifyNewTurnInAssignment(asg, turn);
     }
 
     public void modifyTask(Recipe task, Assignment asg) throws UseCaseLogicException {
         modifySheet(currentSheet);
-        currentSheet.setNewItem(task,asg);
-        notifyItemModified(task,asg);
+        currentSheet.setNewItem(task, asg);
+        notifyItemModified(task, asg);
     }
 
     public void assignPortion(int portion, Assignment asg) throws UseCaseLogicException {
@@ -198,7 +196,7 @@ public class SummarySheetManager {
         if (currentSheet.isOwner(user)) {
             currentSheet.assignPortion(portion, asg);
             notifyPortionAdded(asg, portion);
-        }else{
+        } else {
             throw new UseCaseLogicException();
         }
     }
@@ -212,7 +210,7 @@ public class SummarySheetManager {
         if (currentSheet.isOwner(user)) {
             currentSheet.assignTime(time, asg);
             notifyTimeAdded(asg, time);
-        }else{
+        } else {
             throw new UseCaseLogicException();
         }
     }
@@ -222,7 +220,7 @@ public class SummarySheetManager {
         if (currentSheet.isOwner(user)) {
             currentSheet.setNote(note);
             notifyNoteAdded(note);
-        }else {
+        } else {
             throw new UseCaseLogicException();
         }
     }

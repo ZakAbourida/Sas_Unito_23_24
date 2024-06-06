@@ -13,7 +13,7 @@ import java.util.List;
 public class SheetPersistence implements SheetEventReceiver {
 
     @Override
-    public void updateSheetCreated(SummarySheet sheet){
+    public void updateSheetCreated(SummarySheet sheet) {
         SummarySheet.saveNewSummarySheet(sheet);
     }
 
@@ -40,38 +40,40 @@ public class SheetPersistence implements SheetEventReceiver {
 
     @Override
     public void updateAssignmentPortion(Assignment asg, int portion) {
-        SummarySheet.addPortion(asg,portion);
-
+        SummarySheet.addPortion(asg, portion);
     }
 
     @Override
     public void updateAssignmentTime(Assignment asg, int time) {
-        SummarySheet.addTime(asg,time);
+        SummarySheet.addTime(asg, time);
     }
 
     @Override
     public void updateSummarySheetNotes(SummarySheet sheet, String note) {
-        SummarySheet.addNote(sheet,note);
-
+        SummarySheet.addNote(sheet, note);
     }
 
     @Override
     public void updateCookInAssignment(Assignment asg, Cook cook) {
-        SummarySheet.modifyCookInAssignment(asg,cook);
+        SummarySheet.modifyCookInAssignment(asg, cook);
     }
 
     @Override
     public void updateTurnInAssignment(Assignment asg, Turn turn) {
-            SummarySheet.modifyTurnInAssignment(asg,turn);
+        SummarySheet.modifyTurnInAssignment(asg, turn);
     }
 
     @Override
     public void updateItemModified(Recipe task, Assignment asg) {
-        SummarySheet.modifyTaskInAssignment(asg,task);
+        SummarySheet.modifyTaskInAssignment(asg, task);
     }
 
     @Override
     public void updateAssignmentDeleted(Assignment asg) {
         SummarySheet.deleteAssignment(asg);
+    }
+
+    @Override
+    public void updateSectionsRearranged(SummarySheet sheet) {//SummarySheet.rearrangeSections(sheet);
     }
 }

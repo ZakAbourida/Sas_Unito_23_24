@@ -1,7 +1,5 @@
 package catering.businesslogic.SummarySheet;
 
-
-
 import catering.businesslogic.Turn.Turn;
 import catering.businesslogic.recipe.Recipe;
 import catering.businesslogic.user.Cook;
@@ -26,4 +24,6 @@ public interface SheetEventReceiver {
     void updateItemModified(Recipe task, Assignment asg);
 
     void updateAssignmentDeleted(Assignment asg);
+
+    void updateSectionsRearranged(SummarySheet sheet);
 }

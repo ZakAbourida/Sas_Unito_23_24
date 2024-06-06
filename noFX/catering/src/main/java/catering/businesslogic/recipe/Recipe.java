@@ -7,14 +7,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
-public class Recipe {
+public class Recipe extends  ItemBook{
     private static Map<Integer, Recipe> all = new HashMap<>();
 
     private int id;
     private String name;
 
     private Recipe() {
-
     }
 
     public Recipe(String name) {
@@ -80,9 +79,6 @@ public class Recipe {
         });
         return recipe;
     }
-
-
-
 
     public void setId(int id) {
         this.id = id;
