@@ -2,10 +2,12 @@ package catering.businesslogic;
 
 import catering.businesslogic.SummarySheet.SummarySheet;
 import catering.businesslogic.SummarySheet.SummarySheetManager;
+import catering.businesslogic.Turn.Turn;
 import catering.businesslogic.event.EventManager;
 import catering.businesslogic.menu.MenuManager;
 import catering.businesslogic.recipe.Recipe;
 import catering.businesslogic.recipe.RecipeManager;
+import catering.businesslogic.user.User;
 import catering.businesslogic.user.UserManager;
 import catering.persistence.MenuPersistence;
 import catering.persistence.SheetPersistence;
@@ -71,6 +73,13 @@ public class CatERing {
         return SummarySheet.loadAllSummarySheetsForService(serviceId);
     }
 
+    public List<User> loadAllUsers() {
+        return User.loadAllUsers();
+    }
+
+    public List<Turn> loadAllTurn() {
+        return Turn.loadAllTurns();
+    }
     public List<Recipe> loadAllRecipes() {
         return Recipe.loadAllRecipes();
     }

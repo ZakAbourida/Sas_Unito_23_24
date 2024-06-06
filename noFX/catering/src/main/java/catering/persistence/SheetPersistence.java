@@ -69,4 +69,9 @@ public class SheetPersistence implements SheetEventReceiver {
     public void updateItemModified(Recipe task, Assignment asg) {
         SummarySheet.modifyTaskInAssignment(asg,task);
     }
+
+    @Override
+    public void updateAssignmentDeleted(Assignment asg) {
+        SummarySheet.deleteAssignment(asg);
+    }
 }

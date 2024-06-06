@@ -5,10 +5,7 @@ import catering.persistence.ResultHandler;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class User {
 
@@ -124,6 +121,50 @@ public class User {
             });
         }
         return u;
+    }
+    public static List<User> loadAllUsers() {
+        List<User> users = new ArrayList<>();
+        String query = "SELECT * FROM Users";
+
+        PersistenceManager.executeQuery(query, new ResultHandler() {
+            @Override
+            public void handle(ResultSet rs) throws SQLException {
+                while (rs.next()) {
+                    User user = new User();
+                    user.id = rs.getInt("id");
+                    user.username = rs.getString("username");
+                    users.add(user);
+                    loadedUsers.put(user.id, user);
+                }
+            }
+        });
+
+        for (User user : users) {
+            String roleQuery = "SELECT * FROM UserRoles WHERE user_id=" + user.id;
+            PersistenceManager.executeQuery(roleQuery, new ResultHandler() {
+                @Override
+                public void handle(ResultSet rs) throws SQLException {
+                    while (rs.next()) {
+                        String role = rs.getString("role_id");
+                        switch (role.charAt(0)) {
+                            case 'c':
+                                user.roles.add(User.Role.CUOCO);
+                                break;
+                            case 'h':
+                                user.roles.add(User.Role.CHEF);
+                                break;
+                            case 'o':
+                                user.roles.add(User.Role.ORGANIZZATORE);
+                                break;
+                            case 's':
+                                user.roles.add(User.Role.SERVIZIO);
+                        }
+                    }
+                }
+            });
+        }
+
+        return users;
     }
 
 }

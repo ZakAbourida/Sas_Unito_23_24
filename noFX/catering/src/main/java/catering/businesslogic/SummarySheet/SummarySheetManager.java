@@ -165,7 +165,7 @@ public class SummarySheetManager {
         }
     }
 
-    public void createAssignment(Cook cook, Turn turn, ItemBook item) throws UseCaseLogicException {
+    public void createAssignment(Cook cook, Turn turn, Recipe item) throws UseCaseLogicException {
         User user = CatERing.getInstance().getUserManager().getCurrentUser();
         if (currentSheet.isOwner(user)) {
             Assignment asg = currentSheet.createAssignment(cook, turn, item);

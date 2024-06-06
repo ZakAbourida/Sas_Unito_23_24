@@ -9,11 +9,11 @@ public class Assignment {
     private int id;
     private User cook;
     private Turn turn;
-    private ItemBook item;
+    private Recipe item;
     private int portion;
     private int time;
 
-    public Assignment(User cook, Turn turn, ItemBook item) {
+    public Assignment(User cook, Turn turn, Recipe item) {
         this.cook = cook;
         this.turn = turn;
         this.item = item;
@@ -61,7 +61,7 @@ public class Assignment {
         return turn;
     }
 
-    public ItemBook getRecipe() {
+    public Recipe getRecipe() {
         return item;
     }
 

@@ -3,7 +3,6 @@ package catering.businesslogic.SummarySheet;
 import catering.businesslogic.Turn.Turn;
 import catering.businesslogic.event.ServiceInfo;
 import catering.businesslogic.menu.Menu;
-import catering.businesslogic.recipe.ItemBook;
 import catering.businesslogic.recipe.Recipe;
 import catering.businesslogic.user.Cook;
 import catering.businesslogic.user.User;
@@ -31,6 +30,7 @@ public class SummarySheet {
         this.assignments = new ArrayList<>();
         this.extraTask = new ArrayList<>();
     }
+
 
 
     public void setNote(String note) {
@@ -63,8 +63,8 @@ public class SummarySheet {
             extraTask.add(pos, item);
     }
 
-    public Assignment createAssignment(Cook cook, Turn turn, ItemBook itemBook) {
-        Assignment asg = new Assignment(cook, turn, itemBook);
+    public Assignment createAssignment(Cook cook, Turn turn, Recipe item) {
+        Assignment asg = new Assignment(cook, turn, item);
         assignments.add(asg);
         return asg;
     }
@@ -87,6 +87,7 @@ public class SummarySheet {
         asg.setTask(task);
     }
 
+    //METODI PER LA PERSISTENZA
 
     public static void saveNewSummarySheet(SummarySheet sheet) {
         String query = "INSERT INTO summarysheet (note, owner, service_id, menu) VALUES (?, ?, ?, ?)";
@@ -163,25 +164,112 @@ public class SummarySheet {
     }
 
     public static void saveNewAssignment(SummarySheet sheet, Assignment assignment) {
+        String query = "INSERT INTO assignment (turn, cook, recipe, sheet) VALUES (?, ?, ?, ?)";
+        int[] result = PersistenceManager.executeBatchUpdate(query, 1, new BatchUpdateHandler() {
+            @Override
+            public void handleBatchItem(PreparedStatement ps, int batchCount) throws SQLException {
+                ps.setInt(1, assignment.getTurn().getId());
+                ps.setInt(2, assignment.getCook().getId());
+                ps.setInt(3, assignment.getRecipe().getId());
+                ps.setInt(4, sheet.getId());
+            }
 
+            @Override
+            public void handleGeneratedIds(ResultSet rs, int count) throws SQLException {
+                if (rs.next()) {
+                    assignment.setId(rs.getInt(1));
+                }
+            }
+        });
+
+        if (result.length > 0 && result[0] > 0) {
+            System.out.println("Assignment salvato con ID: " + assignment.getId());
+        } else {
+            System.out.println("Errore durante il salvataggio dell'Assignment.");
+        }
     }
 
     public static void addPortion(Assignment asg, int portion) {
+        String query = "UPDATE assignment SET portion = ? WHERE id = ?";
+        PersistenceManager.executeUpdate(query, new UpdateHandler() {
+            @Override
+            public void handleUpdate(PreparedStatement ps) throws SQLException {
+                ps.setInt(1, portion);
+                ps.setInt(2, asg.getId());
+            }
+        });
+        asg.setPortion(portion);
     }
 
     public static void addTime(Assignment asg, int time) {
+        String query = "UPDATE assignment SET time = ? WHERE id = ?";
+        PersistenceManager.executeUpdate(query, new UpdateHandler() {
+            @Override
+            public void handleUpdate(PreparedStatement ps) throws SQLException {
+                ps.setInt(1, time);
+                ps.setInt(2, asg.getId());
+            }
+        });
+        asg.setTime(time);
     }
 
     public static void addNote(SummarySheet sheet, String note) {
+        String query = "UPDATE summarysheet SET note = ? WHERE id = ?";
+        PersistenceManager.executeUpdate(query, new UpdateHandler() {
+            @Override
+            public void handleUpdate(PreparedStatement ps) throws SQLException {
+                ps.setString(1, PersistenceManager.escapeString(note));
+                ps.setInt(2, sheet.getId());
+            }
+        });
+        sheet.setNote(note);
     }
 
     public static void modifyCookInAssignment(Assignment asg, Cook cook) {
+        String query = "UPDATE assignment SET cook = ? WHERE id = ?";
+        PersistenceManager.executeUpdate(query, new UpdateHandler() {
+            @Override
+            public void handleUpdate(PreparedStatement ps) throws SQLException {
+                ps.setInt(1, cook.getId());
+                ps.setInt(2, asg.getId());
+            }
+        });
+        asg.setCook(cook);
     }
 
     public static void modifyTurnInAssignment(Assignment asg, Turn turn) {
+        String query = "UPDATE assignment SET turn = ? WHERE id = ?";
+        PersistenceManager.executeUpdate(query, new UpdateHandler() {
+            @Override
+            public void handleUpdate(PreparedStatement ps) throws SQLException {
+                ps.setInt(1, turn.getId());
+                ps.setInt(2, asg.getId());
+            }
+        });
+        asg.setTurn(turn);
     }
 
+
     public static void modifyTaskInAssignment(Assignment asg, Recipe task) {
+        String query = "UPDATE assignment SET recipe = ? WHERE id = ?";
+        PersistenceManager.executeUpdate(query, new UpdateHandler() {
+            @Override
+            public void handleUpdate(PreparedStatement ps) throws SQLException {
+                ps.setInt(1, task.getId());
+                ps.setInt(2, asg.getId());
+            }
+        });
+        asg.setTask(task);
+    }
+
+    public static void deleteAssignment(Assignment asg) {
+        String query = "DELETE FROM assignment WHERE id = ?";
+        PersistenceManager.executeUpdate(query, new UpdateHandler() {
+            @Override
+            public void handleUpdate(PreparedStatement ps) throws SQLException {
+                ps.setInt(1, asg.getId());
+            }
+        });
     }
 
     public static List<SummarySheet> loadAllSummarySheets() {

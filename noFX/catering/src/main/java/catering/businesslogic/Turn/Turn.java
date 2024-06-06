@@ -10,7 +10,9 @@ import catering.persistence.ResultHandler;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Time;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class Turn {
     private int id;
@@ -37,6 +39,27 @@ public class Turn {
             }
         });
         return turn;
+    }
+
+    public static List<Turn> loadAllTurns() {
+        List<Turn> turns = new ArrayList<>();
+        String query = "SELECT * FROM turn";
+        PersistenceManager.executeQuery(query, new ResultHandler() {
+            @Override
+            public void handle(ResultSet rs) throws SQLException {
+                while (rs.next()) {
+                    Turn turn = new Turn();
+                    turn.setId(rs.getInt("id"));
+                    turn.setDate(rs.getDate("date"));
+                    turn.setStart(rs.getTime("start"));
+                    turn.setEnd(rs.getTime("end"));
+                    turn.setLocation(rs.getString("location"));
+                    turn.setService(ServiceInfo.loadServiceInfoById(rs.getInt("service")));
+                    turns.add(turn);
+                }
+            }
+        });
+        return turns;
     }
 
     public void setLocation(String location) {
