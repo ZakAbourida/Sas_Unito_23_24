@@ -2,17 +2,15 @@ package catering.businesslogic.SummarySheet;
 
 
 
-import catering.businesslogic.recipe.ItemBook;
+import catering.businesslogic.Turn.Turn;
 import catering.businesslogic.recipe.Recipe;
+import catering.businesslogic.user.Cook;
 
-import java.sql.Time;
 import java.util.List;
 
 public interface SheetEventReceiver {
     void updateSheetCreated(SummarySheet sheet);
     void updateSheetDeleted(SummarySheet sheet);
-    void updateItemAdded(SummarySheet sheet, ItemBook item);
-
     void updateItemAdded(SummarySheet sheet, List<Recipe> items);
 
     void updateAssignmentCreated(SummarySheet sheet, Assignment assignment);
@@ -21,9 +19,9 @@ public interface SheetEventReceiver {
     void updateAssignmentTime(Assignment asg, int time);
     void updateSummarySheetNotes(SummarySheet currentSheet, String note);
 
-    void updateCookInAssignment(Assignment asg);
+    void updateCookInAssignment(Assignment asg, Cook cook);
 
-    void updateTurnInAssignment(Assignment asg);
+    void updateTurnInAssignment(Assignment asg, Turn turn);
 
-    void updateItemModified(ItemBook task, Assignment asg);
+    void updateItemModified(Recipe task, Assignment asg);
 }

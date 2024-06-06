@@ -3,10 +3,11 @@ package catering.persistence;
 import catering.businesslogic.SummarySheet.Assignment;
 import catering.businesslogic.SummarySheet.SheetEventReceiver;
 import catering.businesslogic.SummarySheet.SummarySheet;
+import catering.businesslogic.Turn.Turn;
 import catering.businesslogic.recipe.ItemBook;
 import catering.businesslogic.recipe.Recipe;
+import catering.businesslogic.user.Cook;
 
-import java.sql.Time;
 import java.util.List;
 
 public class SheetPersistence implements SheetEventReceiver {
@@ -19,11 +20,6 @@ public class SheetPersistence implements SheetEventReceiver {
     @Override
     public void updateSheetDeleted(SummarySheet sheet) {
         SummarySheet.deleteSheet(sheet);
-    }
-
-    @Override
-    public void updateItemAdded(SummarySheet sheet, ItemBook item) {
-
     }
 
     @Override
@@ -44,31 +40,33 @@ public class SheetPersistence implements SheetEventReceiver {
 
     @Override
     public void updateAssignmentPortion(Assignment asg, int portion) {
+        SummarySheet.addPortion(asg,portion);
 
     }
 
     @Override
     public void updateAssignmentTime(Assignment asg, int time) {
+        SummarySheet.addTime(asg,time);
+    }
+
+    @Override
+    public void updateSummarySheetNotes(SummarySheet sheet, String note) {
+        SummarySheet.addNote(sheet,note);
 
     }
 
     @Override
-    public void updateSummarySheetNotes(SummarySheet sheet, String notes) {
-
+    public void updateCookInAssignment(Assignment asg, Cook cook) {
+        SummarySheet.modifyCookInAssignment(asg,cook);
     }
 
     @Override
-    public void updateCookInAssignment(Assignment asg) {
-
+    public void updateTurnInAssignment(Assignment asg, Turn turn) {
+            SummarySheet.modifyTurnInAssignment(asg,turn);
     }
 
     @Override
-    public void updateTurnInAssignment(Assignment asg) {
-
-    }
-
-    @Override
-    public void updateItemModified(ItemBook task, Assignment asg) {
-
+    public void updateItemModified(Recipe task, Assignment asg) {
+        SummarySheet.modifyTaskInAssignment(asg,task);
     }
 }

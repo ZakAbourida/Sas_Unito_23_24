@@ -4,6 +4,7 @@ package catering.businesslogic.SummarySheet;
 
 import catering.businesslogic.CatERing;
 import catering.businesslogic.Turn.Turn;
+import catering.businesslogic.UseCaseLogicException;
 import catering.businesslogic.event.ServiceInfo;
 import catering.businesslogic.recipe.ItemBook;
 import catering.businesslogic.recipe.Recipe;
@@ -76,19 +77,19 @@ public class SummarySheetManager {
         }
     }
 
-    private void notifyCookModified(Cook cook, Assignment asg) {
+    private void notifyCookModified(Assignment asg, Cook cook) {
         for (SheetEventReceiver receiver : eventReceivers) {
-            receiver.updateCookInAssignment(asg);
+            receiver.updateCookInAssignment(asg,cook);
         }
     }
 
-    private void notifyNewTurnInAssignment(Turn turn, Assignment asg) {
+    private void notifyNewTurnInAssignment(Assignment asg, Turn turn) {
         for (SheetEventReceiver receiver : eventReceivers) {
-            receiver.updateTurnInAssignment(asg);
+            receiver.updateTurnInAssignment(asg,turn);
         }
     }
 
-    private void notifyItemModified(ItemBook task, Assignment asg) {
+    private void notifyItemModified(Recipe task, Assignment asg) {
         for (SheetEventReceiver receiver : eventReceivers) {
             receiver.updateItemModified(task, asg);
         }
@@ -101,20 +102,17 @@ public class SummarySheetManager {
 
 
 
-    public SummarySheet createSummarySheet(ServiceInfo service) throws SQLException {
+    public SummarySheet createSummarySheet(ServiceInfo service) throws SQLException, UseCaseLogicException {
         User user = CatERing.getInstance().getUserManager().getCurrentUser();
         if (user.isChef() && service.isAssignedChef(user) && service.isAssignedMenu()) {
-            SummarySheet sheet = new SummarySheet(user,service);
+            SummarySheet sheet = new SummarySheet(user, service);
             service.setSheet(sheet);
             setCurrentSheet(sheet);
             notifySheetCreated(sheet);
             return sheet;
+        } else {
+            throw new UseCaseLogicException();
         }
-        //TODO: gestire i casi di errore
-            /*else if(!user.isChef()){
-                throws Object UseCaseLogicException;
-            }*/
-        return null;
     }
 
     public void deleteSheet(SummarySheet sheet) {
@@ -124,81 +122,95 @@ public class SummarySheetManager {
         }
     }
 
-    public boolean modifySheet(SummarySheet sheet) {
+    public boolean modifySheet(SummarySheet sheet) throws UseCaseLogicException {
         User user = CatERing.getInstance().getUserManager().getCurrentUser();
         if (sheet.isOwner(user) && !sheet.isInProgress()) {
             return sheet.isOwner(user);
-        } else return false;
+        } else {
+            throw new UseCaseLogicException();
+        }
     }
 
-    public void addPreparationOrRecipe(Recipe item) {
+    public void addPreparationOrRecipe(Recipe item) throws UseCaseLogicException {
         User user = CatERing.getInstance().getUserManager().getCurrentUser();
         if (currentSheet.isOwner(user)) {
             List<Recipe> items = new ArrayList<>();
             items.add(item);
             notifyItemAdded(items);
+        }else {
+            throw new UseCaseLogicException();
         }
     }
 
-    public void moveRecipePreparation(Recipe item, int pos) {
+    public void moveRecipePreparation(Recipe item, int pos) throws UseCaseLogicException {
         User user = CatERing.getInstance().getUserManager().getCurrentUser();
         if (currentSheet.isOwner(user)) {
             currentSheet.moveRecipePreparation(item, pos);
             notifyItemsRearanged(item);
+        }else{
+            throw new UseCaseLogicException();
         }
     }
 
-    public void createAssignment(Cook cook, Turn turn, ItemBook item){
+    public void createAssignment(Cook cook, Turn turn, ItemBook item) throws UseCaseLogicException {
         User user = CatERing.getInstance().getUserManager().getCurrentUser();
         if (currentSheet.isOwner(user)) {
             Assignment asg = currentSheet.createAssignment(cook, turn, item);
             notifyAssignmentCreated(asg);
+        }else{
+            throw new UseCaseLogicException();
         }
     }
 
-    public void modifyCook(Cook cook, Assignment asg){
+    public void modifyCook(Cook cook, Assignment asg) throws UseCaseLogicException {
         modifySheet(currentSheet);
         currentSheet.setNewCook(cook,asg);
-        notifyCookModified(cook,asg);
+        notifyCookModified(asg,cook);
     }
 
-    public void modifyTurn(Turn turn, Assignment asg){
+    public void modifyTurn(Turn turn, Assignment asg) throws UseCaseLogicException {
         modifySheet(currentSheet);
         currentSheet.setNewTurn(turn,asg);
-        notifyNewTurnInAssignment(turn,asg);
+        notifyNewTurnInAssignment(asg, turn);
     }
 
-    public void modifyTask(ItemBook task, Assignment asg){
+    public void modifyTask(Recipe task, Assignment asg) throws UseCaseLogicException {
         modifySheet(currentSheet);
         currentSheet.setNewItem(task,asg);
         notifyItemModified(task,asg);
     }
 
-    public void assignPortion(int portion, Assignment asg){
+    public void assignPortion(int portion, Assignment asg) throws UseCaseLogicException {
         User user = CatERing.getInstance().getUserManager().getCurrentUser();
         if (currentSheet.isOwner(user)) {
             currentSheet.assignPortion(portion, asg);
             notifyPortionAdded(asg, portion);
+        }else{
+            throw new UseCaseLogicException();
         }
     }
 
-    public void modifyPortion(int newPortion, Assignment asg){
+    public void modifyPortion(int newPortion, Assignment asg) throws UseCaseLogicException {
         assignPortion(newPortion, asg);
     }
 
-    public void assignTime(int time, Assignment asg){
+    public void assignTime(int time, Assignment asg) throws UseCaseLogicException {
         User user = CatERing.getInstance().getUserManager().getCurrentUser();
         if (currentSheet.isOwner(user)) {
             currentSheet.assignTime(time, asg);
             notifyTimeAdded(asg, time);
+        }else{
+            throw new UseCaseLogicException();
         }
     }
 
-    public void writeNote(String note){
+    public void writeNote(String note) throws UseCaseLogicException {
         User user = CatERing.getInstance().getUserManager().getCurrentUser();
         if (currentSheet.isOwner(user)) {
             currentSheet.setNote(note);
             notifyNoteAdded(note);
+        }else {
+            throw new UseCaseLogicException();
         }
     }
 

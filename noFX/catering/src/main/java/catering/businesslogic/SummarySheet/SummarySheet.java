@@ -15,7 +15,6 @@ import catering.persistence.UpdateHandler;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +31,6 @@ public class SummarySheet {
         this.assignments = new ArrayList<>();
         this.extraTask = new ArrayList<>();
     }
-
 
 
     public void setNote(String note) {
@@ -85,7 +83,7 @@ public class SummarySheet {
     public void setNewTurn(Turn turn, Assignment asg) {
         asg.setTurn(turn);
     }
-    public void setNewItem(ItemBook task, Assignment asg) {
+    public void setNewItem(Recipe task, Assignment asg) {
         asg.setTask(task);
     }
 
@@ -165,9 +163,26 @@ public class SummarySheet {
     }
 
     public static void saveNewAssignment(SummarySheet sheet, Assignment assignment) {
-        //TODO: Persistence for new assignment in summarysheet
+
     }
 
+    public static void addPortion(Assignment asg, int portion) {
+    }
+
+    public static void addTime(Assignment asg, int time) {
+    }
+
+    public static void addNote(SummarySheet sheet, String note) {
+    }
+
+    public static void modifyCookInAssignment(Assignment asg, Cook cook) {
+    }
+
+    public static void modifyTurnInAssignment(Assignment asg, Turn turn) {
+    }
+
+    public static void modifyTaskInAssignment(Assignment asg, Recipe task) {
+    }
 
     public static List<SummarySheet> loadAllSummarySheets() {
         List<SummarySheet> sheets = new ArrayList<>();

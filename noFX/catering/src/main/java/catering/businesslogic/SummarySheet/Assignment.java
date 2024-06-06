@@ -5,8 +5,6 @@ import catering.businesslogic.recipe.ItemBook;
 import catering.businesslogic.recipe.Recipe;
 import catering.businesslogic.user.User;
 
-import java.sql.Time;
-
 public class Assignment {
     private int id;
     private User cook;
@@ -47,7 +45,7 @@ public class Assignment {
         this.turn = turn;
     }
 
-    public void setTask(ItemBook item) {
+    public void setTask(Recipe item) {
         this.item = item;
     }
 
