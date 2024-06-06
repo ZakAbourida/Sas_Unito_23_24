@@ -18,7 +18,7 @@ public interface SheetEventReceiver {
     void updateAssignmentCreated(SummarySheet sheet, Assignment assignment);
     void updateExtraTaskRearranged(SummarySheet currentSheet, Recipe item);
     void updateAssignmentPortion(Assignment asg, int portion);
-    void updateAssignmentTime(Assignment asg, Time time);
+    void updateAssignmentTime(Assignment asg, int time);
     void updateSummarySheetNotes(SummarySheet currentSheet, String note);
 
     void updateCookInAssignment(Assignment asg);

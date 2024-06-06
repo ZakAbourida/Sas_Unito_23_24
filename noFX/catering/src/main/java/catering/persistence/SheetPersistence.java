@@ -48,7 +48,7 @@ public class SheetPersistence implements SheetEventReceiver {
     }
 
     @Override
-    public void updateAssignmentTime(Assignment asg, Time time) {
+    public void updateAssignmentTime(Assignment asg, int time) {
 
     }
 

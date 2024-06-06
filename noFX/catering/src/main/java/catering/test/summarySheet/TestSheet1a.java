@@ -14,7 +14,9 @@ import java.util.List;
 import java.util.Scanner;
 
 public class TestSheet1a {
-
+    /**
+     * OP.: DELETE
+     * */
     public static void main(String[] args) {
         System.out.println("TEST LOAD ALL SUMMARY SHEETS");
         List<SummarySheet> sheets = CatERing.getInstance().loadAllSummarySheets();

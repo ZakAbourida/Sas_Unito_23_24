@@ -13,7 +13,7 @@ public class Assignment {
     private Turn turn;
     private ItemBook item;
     private int portion;
-    private Time startTime;
+    private int time;
 
     public Assignment(User cook, Turn turn, ItemBook item) {
         this.cook = cook;
@@ -24,15 +24,15 @@ public class Assignment {
 
     @Override
     public String toString() {
-        return "Assignment ID: " + id + ", Cook: " + cook.getUserName() + ", Turn: " + turn.toString() + ", Item: " + item.toString() + ", Portion: " + portion + ", Time: " + startTime;
+        return "Assignment ID: " + id + ", Cook: " + cook.getUserName() + ", Turn: " + turn.toString() + ", Item: " + item.toString() + ", Portion: " + portion + ", Time: " + time;
     }
 
     public void setPortion(int portion) {
         this.portion = portion;
     }
 
-    public void setTime(Time startTime) {
-        this.startTime = startTime;
+    public void setTime(int startTime) {
+        this.time = startTime;
     }
 
     public void setId(int id) {
@@ -71,7 +71,7 @@ public class Assignment {
         return portion;
     }
 
-    public Time getTime() {
-        return startTime;
+    public int getTime() {
+        return time;
     }
 }

@@ -59,20 +59,12 @@ public class SummarySheet {
             this.extraTask.add(item);
         }
     }
-    /*
-    public void moveRecipePreparation(Recipe item1, ItemBook item2) {
-        int index1 = extraTask.indexOf(item1);
-        int index2 = extraTask.indexOf(item2);
 
-        if (index1 == -1 || index2 == -1) {
-            return; // Uno o entrambi gli elementi non esistono nella lista
-        }
-
-        // Scambia gli elementi
-        extraTask.set(index1, item2);
-        extraTask.set(index2, item1);
+    public void moveRecipePreparation(Recipe item, int pos) {
+            extraTask.remove(item);
+            extraTask.add(pos, item);
     }
-    */
+
     public Assignment createAssignment(Cook cook, Turn turn, ItemBook itemBook) {
         Assignment asg = new Assignment(cook, turn, itemBook);
         assignments.add(asg);
@@ -83,7 +75,7 @@ public class SummarySheet {
         asg.setPortion(portion);
     }
 
-    public void assignTime(Time time, Assignment asg) {
+    public void assignTime(int time, Assignment asg) {
         asg.setTime(time);
     }
 

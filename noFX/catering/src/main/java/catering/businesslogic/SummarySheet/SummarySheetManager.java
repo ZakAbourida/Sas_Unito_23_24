@@ -64,7 +64,7 @@ public class SummarySheetManager {
         }
     }
 
-    private void notifyTimeAdded(Assignment asg, Time time) {
+    private void notifyTimeAdded(Assignment asg, int time) {
         for (SheetEventReceiver receiver : eventReceivers) {
             receiver.updateAssignmentTime(asg, time);
         }
@@ -93,6 +93,11 @@ public class SummarySheetManager {
             receiver.updateItemModified(task, asg);
         }
     }
+
+    private void notifyItemsRearanged(Recipe item) {
+        //TODO: da finire
+    }
+
 
 
 
@@ -134,15 +139,15 @@ public class SummarySheetManager {
             notifyItemAdded(items);
         }
     }
-    /*
-    public void moveRecipePreparation(Recipe item, ItemBook item2) {
+
+    public void moveRecipePreparation(Recipe item, int pos) {
         User user = CatERing.getInstance().getUserManager().getCurrentUser();
         if (currentSheet.isOwner(user)) {
-            currentSheet.moveRecipePreparation(item, item2);
+            currentSheet.moveRecipePreparation(item, pos);
             notifyItemsRearanged(item);
         }
     }
-    */
+
     public void createAssignment(Cook cook, Turn turn, ItemBook item){
         User user = CatERing.getInstance().getUserManager().getCurrentUser();
         if (currentSheet.isOwner(user)) {
@@ -152,16 +157,19 @@ public class SummarySheetManager {
     }
 
     public void modifyCook(Cook cook, Assignment asg){
+        modifySheet(currentSheet);
         currentSheet.setNewCook(cook,asg);
         notifyCookModified(cook,asg);
     }
 
     public void modifyTurn(Turn turn, Assignment asg){
+        modifySheet(currentSheet);
         currentSheet.setNewTurn(turn,asg);
         notifyNewTurnInAssignment(turn,asg);
     }
 
     public void modifyTask(ItemBook task, Assignment asg){
+        modifySheet(currentSheet);
         currentSheet.setNewItem(task,asg);
         notifyItemModified(task,asg);
     }
@@ -174,11 +182,11 @@ public class SummarySheetManager {
         }
     }
 
-    public void modifyPortion(){
-        //TODO: da completare alla fine
+    public void modifyPortion(int newPortion, Assignment asg){
+        assignPortion(newPortion, asg);
     }
 
-    public void assignTime(Time time, Assignment asg){
+    public void assignTime(int time, Assignment asg){
         User user = CatERing.getInstance().getUserManager().getCurrentUser();
         if (currentSheet.isOwner(user)) {
             currentSheet.assignTime(time, asg);
