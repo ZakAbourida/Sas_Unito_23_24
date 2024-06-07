@@ -22,6 +22,8 @@ public class Assignment {
         this.cook = cook;
         this.turn = turn;
         this.item = item;
+        this.portion = 0;
+        this.time = 0;
     }
 
 
@@ -48,6 +50,8 @@ public class Assignment {
 
                 if (turn != null && cook != null && recipe != null) {
                     Assignment assignment = new Assignment(cook, turn, recipe);
+                    assignment.setPortion(portion);
+                    assignment.setTime(time);
                     assignment.setId(rs.getInt("id"));
                     assignments.add(assignment);
                 }
