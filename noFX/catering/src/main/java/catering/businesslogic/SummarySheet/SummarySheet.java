@@ -116,6 +116,7 @@ public class SummarySheet {
     }
 
     public static void deleteSheet(SummarySheet sheet) {
+        deleteAssignmentsBySheet(sheet);
         deleteExtraTasks(sheet);
         String query = "DELETE FROM summarysheet WHERE id = ?";
         PersistenceManager.executeUpdate(query, new UpdateHandler() {
@@ -128,6 +129,16 @@ public class SummarySheet {
 
     private static void deleteExtraTasks(SummarySheet sheet) {
         String query = "DELETE FROM extratask WHERE sheet = ?";
+        PersistenceManager.executeUpdate(query, new UpdateHandler() {
+            @Override
+            public void handleUpdate(PreparedStatement ps) throws SQLException {
+                ps.setInt(1, sheet.getId());
+            }
+        });
+    }
+
+    private static void deleteAssignmentsBySheet(SummarySheet sheet) {
+        String query = "DELETE FROM assignment WHERE sheet = ?";
         PersistenceManager.executeUpdate(query, new UpdateHandler() {
             @Override
             public void handleUpdate(PreparedStatement ps) throws SQLException {

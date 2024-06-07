@@ -43,7 +43,7 @@ public class TestSheet4 {
             System.out.println("------------------------------------");
 
             // Caricare il foglio riepilogativo per il servizio selezionato
-            System.out.println("TEST LOAD SUMMARY SHEET FOR SELECTED SERVICE");
+            System.out.println("SUMMARY SHEET FOR SELECTED SERVICE");
             List<SummarySheet> summarySheets = CatERing.getInstance().loadAllSummarySheetsForService(selectedService.getId());
             SummarySheet summarySheet;
             if (summarySheets.isEmpty()) {
@@ -59,21 +59,10 @@ public class TestSheet4 {
             if (summarySheet.getId() == 0) {
                 throw new IllegalArgumentException("SummarySheet ID non valido");
             }
-
-            // Caricare tutti gli utenti disponibili
-            System.out.println("TEST LOAD ALL USERS");
             List<User> allUsers = CatERing.getInstance().loadAllUsers();
-            if (allUsers.isEmpty()) {
-                System.out.println("Nessun utente trovato.");
-            } else {
-                for (int i = 0; i < allUsers.size(); i++) {
-                    System.out.println((i + 1) + ". " + allUsers.get(i).getUserName());
-                }
-            }
-            System.out.println("------------------------------------");
 
             // Creare n assegnamenti in base alle necessità
-            System.out.println("TEST CREATE ASSIGNMENTS");
+            System.out.println("CREATE ASSIGNMENTS");
             List<Recipe> recipes = CatERing.getInstance().getRecipeManager().getRecipes();
             List<Turn> turns = CatERing.getInstance().loadAllTurnForService(selectedService.getId());
 
