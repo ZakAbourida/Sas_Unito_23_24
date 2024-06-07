@@ -1,7 +1,6 @@
 package catering.businesslogic.SummarySheet;
 
 import catering.businesslogic.Turn.Turn;
-import catering.businesslogic.recipe.ItemBook;
 import catering.businesslogic.recipe.Recipe;
 import catering.businesslogic.user.User;
 import catering.persistence.PersistenceManager;
@@ -41,18 +40,16 @@ public class Assignment {
         PersistenceManager.executeQuery(query, new ResultHandler() {
             @Override
             public void handle(ResultSet rs) throws SQLException {
-                while (rs.next()) {
-                    Turn turn = Turn.loadTurnById(rs.getInt("turn"));
-                    User cook = User.loadUserById(rs.getInt("cook"));
-                    Recipe recipe = Recipe.loadRecipeById(rs.getInt("recipe"));
-                    int portion = rs.getInt("portion");
-                    int time = rs.getInt("time");
+                Turn turn = Turn.loadTurnById(rs.getInt("turn"));
+                User cook = User.loadUserById(rs.getInt("cook"));
+                Recipe recipe = Recipe.loadRecipeById(rs.getInt("recipe"));
+                int portion = rs.getInt("portion");
+                int time = rs.getInt("time");
 
-                    if (turn != null && cook != null && recipe != null) {
-                        Assignment assignment = new Assignment(cook, turn, recipe);
-                        assignment.setId(rs.getInt("id"));
-                        assignments.add(assignment);
-                    }
+                if (turn != null && cook != null && recipe != null) {
+                    Assignment assignment = new Assignment(cook, turn, recipe);
+                    assignment.setId(rs.getInt("id"));
+                    assignments.add(assignment);
                 }
             }
         });
