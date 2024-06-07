@@ -29,14 +29,12 @@ public class Turn {
         PersistenceManager.executeQuery(query, new ResultHandler() {
             @Override
             public void handle(ResultSet rs) throws SQLException {
-                if (rs.next()) {
-                    turn.setId(rs.getInt("id"));
-                    turn.setDate(rs.getDate("date"));
-                    turn.setStart(rs.getTime("start"));
-                    turn.setEnd(rs.getTime("end"));
-                    turn.setLocation(rs.getString("location"));
-                    turn.setService(ServiceInfo.loadServiceInfoById(rs.getInt("service")));
-                }
+                turn.setId(rs.getInt("id"));
+                turn.setDate(rs.getDate("date"));
+                turn.setStart(rs.getTime("start"));
+                turn.setEnd(rs.getTime("end"));
+                turn.setLocation(rs.getString("location"));
+                turn.setService(ServiceInfo.loadServiceInfoById(rs.getInt("service")));
             }
         });
         return turn;
@@ -48,14 +46,14 @@ public class Turn {
         PersistenceManager.executeQuery(query, new ResultHandler() {
             @Override
             public void handle(ResultSet rs) throws SQLException {
-                    Turn turn = new Turn();
-                    turn.setId(rs.getInt("id"));
-                    turn.setDate(rs.getDate("date"));
-                    turn.setStart(rs.getTime("start"));
-                    turn.setEnd(rs.getTime("end"));
-                    turn.setLocation(rs.getString("location"));
-                    turn.setService(ServiceInfo.loadServiceInfoById(rs.getInt("service")));
-                    turns.add(turn);
+                Turn turn = new Turn();
+                turn.setId(rs.getInt("id"));
+                turn.setDate(rs.getDate("date"));
+                turn.setStart(rs.getTime("start"));
+                turn.setEnd(rs.getTime("end"));
+                turn.setLocation(rs.getString("location"));
+                turn.setService(ServiceInfo.loadServiceInfoById(rs.getInt("service")));
+                turns.add(turn);
             }
         });
         return turns;
@@ -65,26 +63,24 @@ public class Turn {
         List<Turn> turns = new ArrayList<>();
         String query = "SELECT * FROM turn";
         PersistenceManager.executeQuery(query, rs -> {
-                Turn turn = new Turn();
-                turn.setId(rs.getInt("id"));
-                turn.setDate(rs.getDate("date"));
-                turn.setStart(rs.getTime("start"));
-                turn.setEnd(rs.getTime("end"));
-                turn.setLocation(rs.getString("location"));
-                turn.setService(ServiceInfo.loadServiceInfoById(rs.getInt("service")));
-                turns.add(turn);
+            Turn turn = new Turn();
+            turn.setId(rs.getInt("id"));
+            turn.setDate(rs.getDate("date"));
+            turn.setStart(rs.getTime("start"));
+            turn.setEnd(rs.getTime("end"));
+            turn.setLocation(rs.getString("location"));
+            turn.setService(ServiceInfo.loadServiceInfoById(rs.getInt("service")));
+            turns.add(turn);
         });
         return turns;
     }
 
     @Override
     public String toString() {
-        return "Turn ID: " + id +
-                ", Date: " + date +
+        return "Date: " + date +
                 ", Start: " + start +
                 ", End: " + end +
-                ", Location: " + location +
-                ", Service: " + (service != null ? service.toString() : "N/A");
+                ", Location: " + location;
     }
 
     public void setLocation(String location) {

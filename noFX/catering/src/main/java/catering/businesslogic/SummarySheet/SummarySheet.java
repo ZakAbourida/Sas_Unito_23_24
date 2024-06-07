@@ -288,6 +288,7 @@ public class SummarySheet {
                     sheet.service = ServiceInfo.loadServiceInfoById(rs.getInt("service_id"));
                     sheet.menu = Menu.loadMenuById(rs.getInt("menu"));
                     sheet.loadExtraTasks();
+                    sheet.loadAssignments();
                     sheets.add(sheet);
             }
         });
@@ -307,6 +308,7 @@ public class SummarySheet {
                     sheet.service = ServiceInfo.loadServiceInfoById(rs.getInt("service_id"));
                     sheet.menu = Menu.loadMenuById(rs.getInt("menu"));
                     sheet.loadExtraTasks(); // Carica gli extra tasks
+                    sheet.loadAssignments();
                     sheets.add(sheet);
             }
         });
@@ -320,6 +322,12 @@ public class SummarySheet {
                 extraTask.add(recipe);
         });
     }
+
+    public void loadAssignments() {
+        Assignment.loadAssignments(this.id, this.assignments);
+    }
+
+
 
     public String testString() {
         StringBuilder result = new StringBuilder();

@@ -4,6 +4,12 @@ import catering.businesslogic.Turn.Turn;
 import catering.businesslogic.recipe.ItemBook;
 import catering.businesslogic.recipe.Recipe;
 import catering.businesslogic.user.User;
+import catering.persistence.PersistenceManager;
+import catering.persistence.ResultHandler;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
 
 public class Assignment {
     private int id;
@@ -22,7 +28,34 @@ public class Assignment {
 
     @Override
     public String toString() {
-        return "Assignment ID: " + id + ", Cook: " + cook.getUserName() + ", Turn: " + turn.toString() + ", Item: " + item.toString() + ", Portion: " + portion + ", Time: " + time;
+        return "Assignment: " +
+                "Turn: " + (turn != null ? turn.toString() : "N/A") +
+                ", Cook: " + (cook != null ? cook.getUserName() : "N/A") +
+                ", Recipe: " + (item != null ? item.getName() : "N/A") +
+                ", Portion: " + portion +
+                ", Time: " + time;
+    }
+
+    public static void loadAssignments(int sheetId, List<Assignment> assignments) {
+        String query = "SELECT * FROM assignment WHERE sheet = " + sheetId;
+        PersistenceManager.executeQuery(query, new ResultHandler() {
+            @Override
+            public void handle(ResultSet rs) throws SQLException {
+                while (rs.next()) {
+                    Turn turn = Turn.loadTurnById(rs.getInt("turn"));
+                    User cook = User.loadUserById(rs.getInt("cook"));
+                    Recipe recipe = Recipe.loadRecipeById(rs.getInt("recipe"));
+                    int portion = rs.getInt("portion");
+                    int time = rs.getInt("time");
+
+                    if (turn != null && cook != null && recipe != null) {
+                        Assignment assignment = new Assignment(cook, turn, recipe);
+                        assignment.setId(rs.getInt("id"));
+                        assignments.add(assignment);
+                    }
+                }
+            }
+        });
     }
 
     public void setPortion(int portion) {
