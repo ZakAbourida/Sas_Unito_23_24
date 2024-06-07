@@ -287,6 +287,7 @@ public class SummarySheet {
                     sheet.owner = User.loadUserById(rs.getInt("owner"));
                     sheet.service = ServiceInfo.loadServiceInfoById(rs.getInt("service_id"));
                     sheet.menu = Menu.loadMenuById(rs.getInt("menu"));
+                    sheet.loadExtraTasks();
                     sheets.add(sheet);
             }
         });
@@ -305,10 +306,19 @@ public class SummarySheet {
                     sheet.owner = User.loadUserById(rs.getInt("owner"));
                     sheet.service = ServiceInfo.loadServiceInfoById(rs.getInt("service_id"));
                     sheet.menu = Menu.loadMenuById(rs.getInt("menu"));
+                    sheet.loadExtraTasks(); // Carica gli extra tasks
                     sheets.add(sheet);
             }
         });
         return sheets;
+    }
+
+    public void loadExtraTasks() {
+        String query = "SELECT * FROM extratask WHERE sheet = " + this.id;
+        PersistenceManager.executeQuery(query, rs -> {
+                Recipe recipe = Recipe.loadRecipeById(rs.getInt("task"));
+                extraTask.add(recipe);
+        });
     }
 
     public String testString() {
@@ -350,11 +360,11 @@ public class SummarySheet {
     }
 
     public List<Assignment> getAssignments() {
-        return assignments;
+        return this.assignments;
     }
 
     public List<Recipe> getExtraTask() {
-        return extraTask;
+        return this.extraTask;
     }
 
     public Menu getMenu() {

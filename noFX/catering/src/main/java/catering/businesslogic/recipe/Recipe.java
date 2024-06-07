@@ -71,11 +71,8 @@ public class Recipe extends  ItemBook{
         PersistenceManager.executeQuery(query, new ResultHandler() {
             @Override
             public void handle(ResultSet rs) throws SQLException {
-                if (rs.next()) {
                     recipe.id = rs.getInt("id");
                     recipe.name = rs.getString("name");
-                    // Carica altre proprietà se necessario
-                }
             }
         });
         return recipe.id != 0 ? recipe : null;
