@@ -1,21 +1,17 @@
 package catering.test.summarySheet;
 
 import catering.businesslogic.CatERing;
-import catering.businesslogic.SummarySheet.SummarySheet;
+import catering.businesslogic.UseCaseLogicException;
 import catering.businesslogic.event.EventInfo;
 import catering.businesslogic.event.ServiceInfo;
-import catering.businesslogic.recipe.Recipe;
 import catering.businesslogic.user.User;
-import catering.persistence.PersistenceManager;
+import catering.businesslogic.SummarySheet.Assignment;
+import catering.businesslogic.SummarySheet.SummarySheet;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-
-public class TestSheet2 {
-    /**
-     * OP.: ADD_RECIPE_PREPARATION
-     * */
+public class TestSheet6 {
     public static void main(String[] args) {
         try {
             System.out.println("LOGIN");
@@ -41,33 +37,38 @@ public class TestSheet2 {
             System.out.print("Seleziona il numero del SummarySheet desiderato: ");
             int sheetIndex = scanner.nextInt() - 1;
             SummarySheet selectedSheet = sheets.get(sheetIndex);
-            CatERing.getInstance().getSummarySheetManager().setCurrentSheet(selectedSheet); // Imposta il foglio corrente
+            CatERing.getInstance().getSummarySheetManager().setCurrentSheet(selectedSheet); //
 
-            System.out.println("\nALL RECIPES");
-            List<Recipe> allRecipes = CatERing.getInstance().getRecipeManager().getRecipes();
-            for (int i = 0; i < allRecipes.size(); i++) {
-                System.out.println((i + 1) + ": " + allRecipes.get(i).getName());
-            }
-
-            System.out.print("Inserisci i numeri delle ricette da aggiungere (separati da virgola): ");
-            scanner.nextLine(); // Consume newline
-            String input = scanner.nextLine();
-            String[] recipeNumbers = input.split(",");
-
-            List<Recipe> selectedRecipes = new ArrayList<>();
-            for (String number : recipeNumbers) {
-                int recipeIndex = Integer.parseInt(number.trim()) - 1;
-                selectedRecipes.add(allRecipes.get(recipeIndex));
-            }
-
-            for (Recipe recipe : selectedRecipes) {
-                CatERing.getInstance().getSummarySheetManager().addPreparationOrRecipe(recipe);
-            }
+            // Imposta il foglio corrente
 
             // Stampa il foglio riepilogativo con tutti i suoi oggetti associati
             System.out.println("\nDettagli del Summary Sheet:");
             System.out.println(selectedSheet.testString());
 
+            // Selezione dell'assignment da modificare
+            System.out.println("\nAssignments:");
+            List<Assignment> assignments = selectedSheet.getAssignments();
+            for (int i = 0; i < assignments.size(); i++) {
+                System.out.println((i + 1) + ": " +
+
+                        assignments.get(i).toString());
+            }
+
+            System.out.print("Seleziona il numero dell'Assignment da modificare: ");
+            int assignmentIndex = scanner.nextInt() - 1;
+            Assignment selectedAssignment = assignments.get(assignmentIndex);
+
+            // Modifica del tempo dell'assegnamento selezionato
+            System.out.print("Inserisci il nuovo tempo per l'Assignment: ");
+            int newTime = scanner.nextInt();
+            CatERing.getInstance().getSummarySheetManager().assignTime(newTime, selectedAssignment);
+
+            // Stampa il foglio riepilogativo aggiornato
+            System.out.println("\nDettagli del Summary Sheet aggiornato:");
+            System.out.println(selectedSheet.testString());
+
+        } catch (UseCaseLogicException e) {
+            System.out.println("Errore di logica nello use case");
         } catch (Exception e) {
             e.printStackTrace();
         }
