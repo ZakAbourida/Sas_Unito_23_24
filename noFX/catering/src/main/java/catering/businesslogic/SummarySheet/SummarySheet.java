@@ -301,7 +301,6 @@ public class SummarySheet {
         PersistenceManager.executeQuery(query, new ResultHandler() {
             @Override
             public void handle(ResultSet rs) throws SQLException {
-                while (rs.next()) {
                     SummarySheet sheet = new SummarySheet();
                     sheet.id = rs.getInt("id");
                     sheet.note = rs.getString("note");
@@ -309,7 +308,6 @@ public class SummarySheet {
                     sheet.service = ServiceInfo.loadServiceInfoById(rs.getInt("service_id"));
                     sheet.menu = Menu.loadMenuById(rs.getInt("menu"));
                     sheets.add(sheet);
-                }
             }
         });
         return sheets;
