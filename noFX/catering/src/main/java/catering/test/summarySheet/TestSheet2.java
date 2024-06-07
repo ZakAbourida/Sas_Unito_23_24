@@ -6,7 +6,6 @@ import catering.businesslogic.event.EventInfo;
 import catering.businesslogic.event.ServiceInfo;
 import catering.businesslogic.recipe.Recipe;
 import catering.businesslogic.user.User;
-import catering.persistence.PersistenceManager;
 
 import java.util.ArrayList;
 import java.util.List;
