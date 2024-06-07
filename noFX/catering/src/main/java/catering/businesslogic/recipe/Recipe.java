@@ -72,12 +72,13 @@ public class Recipe extends  ItemBook{
             @Override
             public void handle(ResultSet rs) throws SQLException {
                 if (rs.next()) {
-                    recipe.setId(rs.getInt("id"));
-                    // Imposta altri attributi se necessario
+                    recipe.id = rs.getInt("id");
+                    recipe.name = rs.getString("name");
+                    // Carica altre proprietà se necessario
                 }
             }
         });
-        return recipe;
+        return recipe.id != 0 ? recipe : null;
     }
 
     public void setId(int id) {

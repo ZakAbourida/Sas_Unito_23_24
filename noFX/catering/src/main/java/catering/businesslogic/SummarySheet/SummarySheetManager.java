@@ -4,18 +4,15 @@ import catering.businesslogic.CatERing;
 import catering.businesslogic.Turn.Turn;
 import catering.businesslogic.UseCaseLogicException;
 import catering.businesslogic.event.ServiceInfo;
-import catering.businesslogic.recipe.ItemBook;
 import catering.businesslogic.recipe.Recipe;
-import catering.businesslogic.user.Cook;
 import catering.businesslogic.user.User;
 
 import java.sql.SQLException;
-import java.sql.Time;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SummarySheetManager {
     private SummarySheet currentSheet;
-
 
     private List<SheetEventReceiver> eventReceivers = new ArrayList<>();
 
@@ -57,9 +54,9 @@ public class SummarySheetManager {
         }
     }
 
-    private void notifyAssignmentCreated(Assignment asg) {
+    private void notifyAssignmentCreated(SummarySheet sheet,Assignment asg) {
         for (SheetEventReceiver receiver : eventReceivers) {
-            receiver.updateAssignmentCreated(currentSheet, asg);
+            receiver.updateAssignmentCreated(sheet, asg);
         }
     }
 
@@ -81,7 +78,7 @@ public class SummarySheetManager {
         }
     }
 
-    private void notifyCookModified(Assignment asg, Cook cook) {
+    private void notifyCookModified(Assignment asg, User cook) {
         for (SheetEventReceiver receiver : eventReceivers) {
             receiver.updateCookInAssignment(asg, cook);
         }
@@ -105,11 +102,11 @@ public class SummarySheetManager {
         }
     }
 
-
     public SummarySheet createSummarySheet(ServiceInfo service) throws SQLException, UseCaseLogicException {
         User user = CatERing.getInstance().getUserManager().getCurrentUser();
         if (user.isChef() && service.isAssignedChef(user) && service.isAssignedMenu()) {
             SummarySheet sheet = new SummarySheet(user, service);
+            SummarySheet.saveNewSummarySheet(sheet);
             service.setSheet(sheet);
             setCurrentSheet(sheet);
             notifySheetCreated(sheet);
@@ -163,17 +160,23 @@ public class SummarySheetManager {
         }
     }
 
-    public void createAssignment(Cook cook, Turn turn, Recipe item) throws UseCaseLogicException {
-        User user = CatERing.getInstance().getUserManager().getCurrentUser();
-        if (currentSheet.isOwner(user)) {
-            Assignment asg = currentSheet.createAssignment(cook, turn, item);
-            notifyAssignmentCreated(asg);
-        } else {
-            throw new UseCaseLogicException();
+    public void createAssignment(SummarySheet sheet, User cook, Turn turn, Recipe item, Integer portion, Integer time) throws UseCaseLogicException {
+        if (sheet == null || sheet.getId() == 0) {
+            throw new IllegalArgumentException("SummarySheet cannot be null and must have a valid ID");
         }
+        if (portion == null) {
+            portion = 0;
+        }
+        if (time == null) {
+            time = 0;
+        }
+        Assignment assignment = sheet.createAssignment(cook, turn, item);
+        sheet.assignPortion(portion, assignment);
+        sheet.assignTime(time, assignment);
+        notifyAssignmentCreated(sheet,assignment);
     }
 
-    public void modifyCook(Cook cook, Assignment asg) throws UseCaseLogicException {
+    public void modifyCook(User cook, Assignment asg) throws UseCaseLogicException {
         modifySheet(currentSheet);
         currentSheet.setNewCook(cook, asg);
         notifyCookModified(asg, cook);
@@ -240,5 +243,4 @@ public class SummarySheetManager {
     public void setEventReceivers(List<SheetEventReceiver> eventReceivers) {
         this.eventReceivers = eventReceivers;
     }
-
 }

@@ -77,9 +77,16 @@ public class CatERing {
         return User.loadAllUsers();
     }
 
+
     public List<Turn> loadAllTurn() {
         return Turn.loadAllTurns();
     }
+
+    public List<Turn> loadAllTurnForService(int service_id) {
+        return Turn.loadAllTurnsForService(service_id);
+    }
+
+
     public List<Recipe> loadAllRecipes() {
         return Recipe.loadAllRecipes();
     }

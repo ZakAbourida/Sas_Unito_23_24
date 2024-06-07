@@ -7,6 +7,7 @@ import catering.businesslogic.Turn.Turn;
 import catering.businesslogic.recipe.ItemBook;
 import catering.businesslogic.recipe.Recipe;
 import catering.businesslogic.user.Cook;
+import catering.businesslogic.user.User;
 
 import java.util.List;
 
@@ -54,8 +55,8 @@ public class SheetPersistence implements SheetEventReceiver {
     }
 
     @Override
-    public void updateCookInAssignment(Assignment asg, Cook cook) {
-        SummarySheet.modifyCookInAssignment(asg, cook);
+    public void updateCookInAssignment(Assignment asg, User cook) {
+        SummarySheet.modifyCookInAssignment(asg, (Cook) cook);
     }
 
     @Override

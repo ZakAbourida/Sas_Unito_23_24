@@ -90,10 +90,10 @@ public class Menu {
             @Override
             public void handle(ResultSet rs) throws SQLException {
 
-                    menu.id = rs.getInt("id");
-                    menu.title = rs.getString("title");
-                    menu.published = rs.getBoolean("published");
-                    // carica altre proprietà se necessario...
+                menu.id = rs.getInt("id");
+                menu.title = rs.getString("title");
+                menu.published = rs.getBoolean("published");
+                // carica altre proprietà se necessario...
             }
         });
 

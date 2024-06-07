@@ -38,8 +38,8 @@ public class SummarySheet {
     public SummarySheet(User owner, ServiceInfo service) {
         this();
         this.owner = owner;
-        this.menu = service.getMenu(service.getId());
         this.service = service;
+        this.menu = service.getMenu(service.getId()); // Carica il menu associato al servizio
     }
 
     public boolean isInProgress() {
@@ -61,7 +61,7 @@ public class SummarySheet {
         extraTask.add(pos, item);
     }
 
-    public Assignment createAssignment(Cook cook, Turn turn, Recipe item) {
+    public Assignment createAssignment(User cook, Turn turn, Recipe item) {
         Assignment asg = new Assignment(cook, turn, item);
         assignments.add(asg);
         return asg;
@@ -75,7 +75,7 @@ public class SummarySheet {
         asg.setTime(time);
     }
 
-    public void setNewCook(Cook cook, Assignment asg) {
+    public void setNewCook(User cook, Assignment asg) {
         asg.setCook(cook);
     }
 
@@ -87,7 +87,7 @@ public class SummarySheet {
         asg.setTask(task);
     }
 
-    //METODI PER LA PERSISTENZA
+    // METODI PER LA PERSISTENZA
 
     public static void saveNewSummarySheet(SummarySheet sheet) {
         String query = "INSERT INTO summarysheet (note, owner, service_id, menu) VALUES (?, ?, ?, ?)";
@@ -110,7 +110,6 @@ public class SummarySheet {
         });
 
         if (result.length > 0 && result[0] > 0) {
-            System.out.println("SummarySheet salvato con ID: " + sheet.id);
         } else {
             System.out.println("Errore durante il salvataggio del SummarySheet.");
         }
@@ -155,16 +154,19 @@ public class SummarySheet {
 
         if (result.length == items.size()) {
             for (Recipe item : items) {
-                sheet.addExtraTask(item); // Usa il metodo aggiornato
+                sheet.addExtraTask(item); // Aggiunge l'elemento alla lista extraTask del foglio riepilogativo
             }
             System.out.println("Tutti gli extra task sono stati aggiunti al SummarySheet con ID: " + sheet.getId());
         } else {
             System.out.println("Errore durante l'aggiunta degli extra task al SummarySheet.");
         }
     }
-
     public static void saveNewAssignment(SummarySheet sheet, Assignment assignment) {
-        String query = "INSERT INTO assignment (turn, cook, recipe, sheet) VALUES (?, ?, ?, ?)";
+        if (sheet == null || sheet.getId() == 0) {
+            throw new IllegalArgumentException("SummarySheet cannot be null and must have a valid ID");
+        }
+
+        String query = "INSERT INTO assignment (turn, cook, recipe, sheet, portion, time) VALUES (?, ?, ?, ?, ?, ?)";
         int[] result = PersistenceManager.executeBatchUpdate(query, 1, new BatchUpdateHandler() {
             @Override
             public void handleBatchItem(PreparedStatement ps, int batchCount) throws SQLException {
@@ -172,6 +174,8 @@ public class SummarySheet {
                 ps.setInt(2, assignment.getCook().getId());
                 ps.setInt(3, assignment.getRecipe().getId());
                 ps.setInt(4, sheet.getId());
+                ps.setInt(5, assignment.getPortion());
+                ps.setInt(6, assignment.getTime());
             }
 
             @Override
@@ -183,7 +187,7 @@ public class SummarySheet {
         });
 
         if (result.length > 0 && result[0] > 0) {
-            System.out.println("Assignment salvato con ID: " + assignment.getId());
+            System.out.println("Assignment salvato!");
         } else {
             System.out.println("Errore durante il salvataggio dell'Assignment.");
         }
@@ -225,7 +229,7 @@ public class SummarySheet {
         sheet.setNote(note);
     }
 
-    public static void modifyCookInAssignment(Assignment asg, Cook cook) {
+    public static void modifyCookInAssignment(Assignment asg, User cook) {
         String query = "UPDATE assignment SET cook = ? WHERE id = ?";
         PersistenceManager.executeUpdate(query, new UpdateHandler() {
             @Override
@@ -329,6 +333,8 @@ public class SummarySheet {
             for (Assignment a : assignments) {
                 result.append(a != null ? a.toString() : "N/A").append("\n");
             }
+        } else {
+            result.append("N/A\n");
         }
 
         result.append("Extra Tasks:\n");
@@ -336,13 +342,15 @@ public class SummarySheet {
             for (Recipe ib : extraTask) {
                 result.append(ib != null ? ib.toString() : "N/A").append("\n");
             }
+        } else {
+            result.append("N/A\n");
         }
 
         return result.toString();
     }
 
     public int getId() {
-        return id;
+        return this.id;
     }
 
     public List<Assignment> getAssignments() {
@@ -351,5 +359,9 @@ public class SummarySheet {
 
     public List<Recipe> getExtraTask() {
         return extraTask;
+    }
+
+    public Menu getMenu() {
+        return this.menu;
     }
 }

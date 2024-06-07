@@ -3,6 +3,7 @@ package catering.businesslogic.SummarySheet;
 import catering.businesslogic.Turn.Turn;
 import catering.businesslogic.recipe.Recipe;
 import catering.businesslogic.user.Cook;
+import catering.businesslogic.user.User;
 
 import java.util.List;
 
@@ -17,7 +18,7 @@ public interface SheetEventReceiver {
     void updateAssignmentTime(Assignment asg, int time);
     void updateSummarySheetNotes(SummarySheet currentSheet, String note);
 
-    void updateCookInAssignment(Assignment asg, Cook cook);
+    void updateCookInAssignment(Assignment asg, User cook);
 
     void updateTurnInAssignment(Assignment asg, Turn turn);
 

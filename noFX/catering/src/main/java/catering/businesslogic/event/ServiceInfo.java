@@ -12,7 +12,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Time;
 
-
 public class ServiceInfo implements EventItemInfo {
     private int id;
     private String name;
@@ -24,8 +23,7 @@ public class ServiceInfo implements EventItemInfo {
     private Menu menu;
     private SummarySheet sheet;
 
-    public ServiceInfo(String name) {
-        this.name = name;
+    public ServiceInfo() {
     }
 
     public int getId() {
@@ -45,21 +43,23 @@ public class ServiceInfo implements EventItemInfo {
         PersistenceManager.executeQuery(query, new ResultHandler() {
             @Override
             public void handle(ResultSet rs) throws SQLException {
-                String s = rs.getString("name");
-                ServiceInfo serv = new ServiceInfo(s);
-                serv.id = rs.getInt("id");
-                serv.date = rs.getDate("service_date");
-                serv.timeStart = rs.getTime("time_start");
-                serv.timeEnd = rs.getTime("time_end");
-                serv.participants = rs.getInt("expected_participants");
+                while (rs.next()) {
+                    ServiceInfo serv = new ServiceInfo();
+                    serv.id = rs.getInt("id");
+                    serv.name = rs.getString("name");
+                    serv.date = rs.getDate("service_date");
+                    serv.timeStart = rs.getTime("time_start");
+                    serv.timeEnd = rs.getTime("time_end");
+                    serv.participants = rs.getInt("expected_participants");
 
-                // Carica il menu associato se presente
-                int menuId = rs.getInt("proposed_menu_id");
-                if (menuId > 0) {
-                    serv.menu = Menu.loadMenuById(menuId);
+                    // Carica il menu associato se presente
+                    int menuId = rs.getInt("proposed_menu_id");
+                    if (menuId > 0) {
+                        serv.menu = Menu.loadMenuById(menuId);
+                    }
+
+                    result.add(serv);
                 }
-
-                result.add(serv);
             }
         });
 
@@ -71,38 +71,41 @@ public class ServiceInfo implements EventItemInfo {
             // Carica il menu dal database se non è già caricato
             String query = "SELECT proposed_menu_id FROM services WHERE id = " + serviceId;
             PersistenceManager.executeQuery(query, rs -> {
+                if (rs.next()) {
                     int menuId = rs.getInt("proposed_menu_id");
                     if (menuId > 0) {
                         menu = Menu.loadMenuById(menuId);
                     }
+                }
             });
         }
         return this.menu;
     }
 
-    public static ServiceInfo loadServiceInfoById(int id) {
-        final ServiceInfo[] service = {null};
-        String query = "SELECT * FROM Services WHERE id = " + id;
+    public static ServiceInfo loadServiceInfoById(int serviceId) {
+        final ServiceInfo service = new ServiceInfo();
+        String query = "SELECT * FROM services WHERE id = " + serviceId;
         PersistenceManager.executeQuery(query, new ResultHandler() {
             @Override
             public void handle(ResultSet rs) throws SQLException {
                 if (rs.next()) {
-                    service[0] = new ServiceInfo(rs.getString("name"));
-                    service[0].id = rs.getInt("id");
-                    service[0].date = rs.getDate("service_date");
-                    service[0].timeStart = rs.getTime("time_start");
-                    service[0].timeEnd = rs.getTime("time_end");
-                    service[0].participants = rs.getInt("expected_participants");
+                    service.id = rs.getInt("id");
+                    service.name = rs.getString("name");
+                    service.date = rs.getDate("service_date");
+                    service.timeStart = rs.getTime("time_start");
+                    service.timeEnd = rs.getTime("time_end");
+                    service.participants = rs.getInt("expected_participants");
+
+                    // Carica il menu associato se presente
                     int menuId = rs.getInt("proposed_menu_id");
                     if (menuId > 0) {
-                        service[0].menu = Menu.loadMenuById(menuId);
+                        service.menu = Menu.loadMenuById(menuId);
                     }
                 }
             }
         });
-        return service[0];
+        return service.id != 0 ? service : null;
     }
-
 
     public boolean isAssignedChef(User user) {
         return true;

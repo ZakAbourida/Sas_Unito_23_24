@@ -74,7 +74,7 @@ public class MenuPersistence implements MenuEventReceiver {
     @Override
     public void updateItemSectionChanged(Menu m, Section s, MenuItem mi) {
         int sid = (s == null ? 0 : s.getId());
-        MenuItem.saveSection(sid, mi);
+        MenuItem.saveSection(sid, mi);  // Corretto per chiamare il metodo saveSection con il giusto contesto
     }
 
     @Override
