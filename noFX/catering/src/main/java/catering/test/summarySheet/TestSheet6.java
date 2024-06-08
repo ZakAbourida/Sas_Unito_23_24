@@ -39,7 +39,6 @@ public class TestSheet6 {
             SummarySheet selectedSheet = sheets.get(sheetIndex);
             CatERing.getInstance().getSummarySheetManager().setCurrentSheet(selectedSheet); //
 
-            // Imposta il foglio corrente
 
             // Stampa il foglio riepilogativo con tutti i suoi oggetti associati
             System.out.println("\nDettagli del Summary Sheet:");
