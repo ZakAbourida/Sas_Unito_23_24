@@ -56,7 +56,7 @@ public class SheetPersistence implements SheetEventReceiver {
 
     @Override
     public void updateCookInAssignment(Assignment asg, User cook) {
-        SummarySheet.modifyCookInAssignment(asg, (Cook) cook);
+        SummarySheet.modifyCookInAssignment(asg, cook);
     }
 
     @Override
