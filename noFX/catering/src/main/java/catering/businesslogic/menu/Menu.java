@@ -76,7 +76,7 @@ public class Menu {
     }
 
     /**
-     *METHODS FOR MAIN OPERATIONS
+     *<h2>METHODS FOR MAIN OPERATIONS</h2>
      */
 
 
@@ -522,7 +522,7 @@ public class Menu {
     }
 
     /**
-     * GETTER AND SETTER
+     * <h2>GETTER AND SETTER</h2>
      */
     public int getSectionCount() {
         return sections.size();
