@@ -21,19 +21,10 @@ public class Preparation extends ItemBook {
         this.name = name;
     }
 
-    public String getName() {
-        return name;
-    }
 
-    public int getId() {
-        return id;
-    }
-
-    public String toString() {
-        return name;
-    }
-
-    // STATIC METHODS FOR PERSISTENCE
+    /**
+     * <h2>STATIC METHODS FOR PERSISTENCE</h2>
+     */
 
     public static ArrayList<Preparation> loadAllPreparations() {
         String query = "SELECT * FROM Preparations";
@@ -61,9 +52,6 @@ public class Preparation extends ItemBook {
         return ret;
     }
 
-    public static ArrayList<Preparation> getAllPreparations() {
-        return new ArrayList<Preparation>(all.values());
-    }
 
     public static Preparation loadPreparationById(int id) {
         Preparation preparation = new Preparation();
@@ -80,7 +68,27 @@ public class Preparation extends ItemBook {
         return preparation;
     }
 
+    /**
+     * <h2>GETTER AND SETTER</h2>
+     */
+
     public void setId(int id) {
         this.id = id;
+    }
+
+    public static ArrayList<Preparation> getAllPreparations() {
+        return new ArrayList<Preparation>(all.values());
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String toString() {
+        return name;
     }
 }

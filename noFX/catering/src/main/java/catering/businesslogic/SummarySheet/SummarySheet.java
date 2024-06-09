@@ -25,29 +25,22 @@ public class SummarySheet {
     private List<Assignment> assignments;
     private List<Recipe> extraTask;
 
+
     public SummarySheet() {
         this.assignments = new ArrayList<>();
         this.extraTask = new ArrayList<>();
     }
 
-    public void setNote(String note) {
-        this.note = note;
-    }
-
     public SummarySheet(User owner, ServiceInfo service) {
-        this();
         this.owner = owner;
         this.service = service;
         this.menu = service.getMenu(service.getId()); // Carica il menu associato al servizio
     }
 
-    public boolean isInProgress() {
-        return false;
-    }
+    /**
+     * <h2>METHODS FOR MAIN OPERATIONS</h2>
+     */
 
-    public boolean isOwner(User user) {
-        return true;
-    }
 
     public void addExtraTask(Recipe item) {
         if (!this.extraTask.contains(item)) {
@@ -92,7 +85,52 @@ public class SummarySheet {
         asg.setTask(task);
     }
 
-    // METODI PER LA PERSISTENZA
+    public boolean isInProgress() {
+        return false;
+    }
+
+    public boolean isOwner(User user) {
+        return true;
+    }
+
+    public String testString() {
+        StringBuilder result = new StringBuilder();
+        result.append("SummarySheet ID: ").append(id).append("\n");
+        result.append("Owner: ").append(owner != null ? owner.getUserName() : "N/A").append("\n");
+        result.append("Note: ").append(note != null ? note : "N/A").append("\n");
+
+        result.append("Menu:\n");
+        if (menu != null) {
+            result.append(menu.testString()).append("\n");
+        } else {
+            result.append("N/A\n");
+        }
+
+        result.append("Assignments:\n");
+        if (assignments != null) {
+            for (Assignment a : assignments) {
+                result.append(a != null ? a.toString() : "N/A").append("\n");
+            }
+        } else {
+            result.append("N/A\n");
+        }
+
+        result.append("Extra Tasks:\n");
+        if (extraTask != null) {
+            for (Recipe ib : extraTask) {
+                result.append(ib != null ? ib.toString() : "N/A").append("\n");
+            }
+        } else {
+            result.append("N/A\n");
+        }
+
+        return result.toString();
+    }
+
+
+    /**
+     * <h2>STATIC METHODS FOR PERSISTENCE</h2>
+     */
 
     public static void saveNewSummarySheet(SummarySheet sheet) {
         String query = "INSERT INTO summarysheet (note, owner, service_id, menu) VALUES (?, ?, ?, ?)";
@@ -355,39 +393,9 @@ public class SummarySheet {
     }
 
 
-    public String testString() {
-        StringBuilder result = new StringBuilder();
-        result.append("SummarySheet ID: ").append(id).append("\n");
-        result.append("Owner: ").append(owner != null ? owner.getUserName() : "N/A").append("\n");
-        result.append("Note: ").append(note != null ? note : "N/A").append("\n");
-
-        result.append("Menu:\n");
-        if (menu != null) {
-            result.append(menu.testString()).append("\n");
-        } else {
-            result.append("N/A\n");
-        }
-
-        result.append("Assignments:\n");
-        if (assignments != null) {
-            for (Assignment a : assignments) {
-                result.append(a != null ? a.toString() : "N/A").append("\n");
-            }
-        } else {
-            result.append("N/A\n");
-        }
-
-        result.append("Extra Tasks:\n");
-        if (extraTask != null) {
-            for (Recipe ib : extraTask) {
-                result.append(ib != null ? ib.toString() : "N/A").append("\n");
-            }
-        } else {
-            result.append("N/A\n");
-        }
-
-        return result.toString();
-    }
+    /**
+     * <h2>GETTER AND SETTER</h2>
+     */
 
     public int getId() {
         return this.id;
@@ -403,6 +411,10 @@ public class SummarySheet {
 
     public Menu getMenu() {
         return this.menu;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
     }
 
 }

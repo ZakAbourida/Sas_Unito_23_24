@@ -23,6 +23,21 @@ public class Turn {
     public Turn() {
     }
 
+    /**
+     *<h2>METHODS FOR MAIN OPERATIONS</h2>
+     */
+
+    @Override
+    public String toString() {
+        return "Date: " + date +
+                ", Start: " + start +
+                ", End: " + end +
+                ", Location: " + location;
+    }
+
+    /**
+     * <h2>STATIC METHODS FOR PERSISTENCE</h2>
+     */
     public static Turn loadTurnById(int id) {
         Turn turn = new Turn();
         String query = "SELECT * FROM turn WHERE id = " + id;
@@ -75,13 +90,10 @@ public class Turn {
         return turns;
     }
 
-    @Override
-    public String toString() {
-        return "Date: " + date +
-                ", Start: " + start +
-                ", End: " + end +
-                ", Location: " + location;
-    }
+
+    /**
+     *<h2>GETTER AND SETTER</h2>
+     */
 
     public void setLocation(String location) {
         this.location = location;

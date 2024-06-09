@@ -13,7 +13,9 @@ public class TurnManager {
     private TableTurns currentTable;
     private List<TurnEventReceiver> eventReceivers = new ArrayList<>();
 
-    // Event sender methods
+    /**
+     * <h2>ALL NOTIFY METHODS</h2>
+     */
     public void notifyTurnCreated(Turn turn) {
         for (TurnEventReceiver receiver : eventReceivers) {
             receiver.updateTurnCreated(turn);
@@ -50,7 +52,10 @@ public class TurnManager {
         }
     }
 
-    // Operation methods
+    /**
+     * <h2>METHODS FOR MAIN OPERATIONS</h2>
+     */
+
     public Turn createTurn(ServiceInfo service) {
         Turn turn = new Turn();
         notifyTurnCreated(turn);
@@ -82,8 +87,11 @@ public class TurnManager {
         notifyTurnAssigned(turn);
     }
 
+    /**
+     * <h2>GETTER AND SETTER</h2>
+     */
+
     public List<EventInfo> getEvents() {
-        // Implementazione della logica per ottenere gli eventi
         return new ArrayList<>();
     }
 }

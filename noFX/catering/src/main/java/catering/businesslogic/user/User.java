@@ -23,17 +23,15 @@ public class User {
         this.roles = new HashSet<>();
     }
 
+    /**
+     * <h2>METHODS FOR MAIN OPERATIONS</h2>
+     */
+
+
     public boolean isChef() {
         return roles.contains(Role.CHEF);
     }
 
-    public String getUserName() {
-        return username;
-    }
-
-    public int getId() {
-        return this.id;
-    }
 
     public String toString() {
         String result = username;
@@ -47,7 +45,10 @@ public class User {
         return result;
     }
 
-    // STATIC METHODS FOR PERSISTENCE
+
+    /**
+     * <h2>STATIC METHODS FOR PERSISTENCE</h2>
+     */
 
     public static User loadUserById(int uid) {
         if (loadedUsers.containsKey(uid)) return loadedUsers.get(uid);
@@ -168,4 +169,14 @@ public class User {
         return users;
     }
 
+    /**
+     * <h2>GETTER AND SETTER</h2>
+     */
+    public String getUserName() {
+        return username;
+    }
+
+    public int getId() {
+        return this.id;
+    }
 }

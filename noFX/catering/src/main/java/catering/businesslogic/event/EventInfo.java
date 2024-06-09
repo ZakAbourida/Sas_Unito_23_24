@@ -24,16 +24,18 @@ public class EventInfo implements EventItemInfo {
         id = 0;
     }
 
-    public ArrayList<ServiceInfo> getServices() {
-        return this.services;
-    }
+    /**
+     * <h2>METHODS FOR MAIN OPERATIONS</h2>
+     */
 
     public String toString() {
         return name + ": " + dateStart + "-" + dateEnd + ", " + participants + " pp. (" + organizer.getUserName() + ")";
     }
 
-    // STATIC METHODS FOR PERSISTENCE
 
+    /**
+     * <h2>STATIC METHODS FOR PERSISTENCE</h2>
+     */
     public static ArrayList<EventInfo> loadAllEventInfo() {
         ArrayList<EventInfo> all = new ArrayList<>();
         String query = "SELECT * FROM Events WHERE true";
@@ -56,5 +58,64 @@ public class EventInfo implements EventItemInfo {
             e.services = ServiceInfo.loadServiceInfoForEvent(e.id);
         }
         return all;
+    }
+
+    /**
+     * <h2>GETTER AND SETTER</h2>
+     */
+    public ArrayList<ServiceInfo> getServices() {
+        return this.services;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Date getDateStart() {
+        return dateStart;
+    }
+
+    public void setDateStart(Date dateStart) {
+        this.dateStart = dateStart;
+    }
+
+    public Date getDateEnd() {
+        return dateEnd;
+    }
+
+    public void setDateEnd(Date dateEnd) {
+        this.dateEnd = dateEnd;
+    }
+
+    public int getParticipants() {
+        return participants;
+    }
+
+    public void setParticipants(int participants) {
+        this.participants = participants;
+    }
+
+    public User getOrganizer() {
+        return organizer;
+    }
+
+    public void setOrganizer(User organizer) {
+        this.organizer = organizer;
+    }
+
+    public void setServices(ArrayList<ServiceInfo> services) {
+        this.services = services;
     }
 }

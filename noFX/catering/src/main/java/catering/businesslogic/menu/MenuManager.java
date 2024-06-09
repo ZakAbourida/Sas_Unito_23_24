@@ -16,6 +16,104 @@ public class MenuManager {
         eventReceivers = new ArrayList<>();
     }
 
+    /**
+     * <h2>ALL NOTIFY METHODS</h2>
+     */
+
+    private void notifyItemDeleted(Section sec, MenuItem mi) {
+        for (MenuEventReceiver er : this.eventReceivers) {
+            er.updateItemDeleted(this.currentMenu, sec, mi);
+        }
+    }
+
+    private void notifyItemDescriptionChanged(MenuItem mi) {
+        for (MenuEventReceiver er : this.eventReceivers) {
+            er.updateItemDescriptionChanged(this.currentMenu, mi);
+        }
+    }
+
+    private void notifyItemSectionChanged(MenuItem mi, Section s) {
+        for (MenuEventReceiver er : this.eventReceivers) {
+            er.updateItemSectionChanged(this.currentMenu, s, mi);
+        }
+    }
+
+    private void notifySectionItemsRearranged(Section sec) {
+        for (MenuEventReceiver er : this.eventReceivers) {
+            er.updateSectionItemsRearranged(this.currentMenu, sec);
+        }
+    }
+
+    private void notifyFreeItemsRearranged() {
+        for (MenuEventReceiver er : this.eventReceivers) {
+            er.updateFreeItemsRearranged(this.currentMenu);
+        }
+    }
+
+    private void notifySectionsRearranged() {
+        for (MenuEventReceiver er : this.eventReceivers) {
+            er.updateSectionsRearranged(this.currentMenu);
+        }
+    }
+
+    private void notifySectionChangedName(Section s) {
+        for (MenuEventReceiver er : this.eventReceivers) {
+            er.updateSectionChangedName(this.currentMenu, s);
+        }
+    }
+
+    private void notifySectionDeleted(Section s, boolean itemsDeleted) {
+        for (MenuEventReceiver er : this.eventReceivers) {
+            er.updateSectionDeleted(this.currentMenu, s, itemsDeleted);
+        }
+    }
+
+    private void notifyMenuDeleted(Menu m) {
+        for (MenuEventReceiver er : this.eventReceivers) {
+            er.updateMenuDeleted(m);
+        }
+    }
+
+    private void notifyMenuPublishedState() {
+        for (MenuEventReceiver er : this.eventReceivers) {
+            er.updateMenuPublishedState(this.currentMenu);
+        }
+    }
+
+    private void notifyMenuTitleChanged() {
+        for (MenuEventReceiver er : this.eventReceivers) {
+            er.updateMenuTitleChanged(this.currentMenu);
+        }
+    }
+
+    private void notifyMenuFeaturesChanged() {
+        for (MenuEventReceiver er : this.eventReceivers) {
+            er.updateMenuFeaturesChanged(this.currentMenu);
+        }
+    }
+
+    private void notifyMenuItemAdded(MenuItem mi) {
+        for (MenuEventReceiver er : this.eventReceivers) {
+            er.updateMenuItemAdded(this.currentMenu, mi);
+        }
+    }
+
+    private void notifySectionAdded(Menu m, Section sec) {
+        for (MenuEventReceiver er : this.eventReceivers) {
+            er.updateSectionAdded(m, sec);
+        }
+    }
+
+    private void notifyMenuAdded(Menu m) {
+        for (MenuEventReceiver er : this.eventReceivers) {
+            er.updateMenuCreated(m);
+        }
+    }
+
+    /**
+     * <h2>METHODS FOR MAIN OPERATIONS</h2>
+     */
+
     public Menu createMenu() throws UseCaseLogicException {
         return this.createMenu(null);
     }
@@ -209,95 +307,18 @@ public class MenuManager {
         this.notifyItemDeleted(sec, mi);
     }
 
-    private void notifyItemDeleted(Section sec, MenuItem mi) {
-        for (MenuEventReceiver er : this.eventReceivers) {
-            er.updateItemDeleted(this.currentMenu, sec, mi);
-        }
+    public void addEventReceiver(MenuEventReceiver rec) {
+        this.eventReceivers.add(rec);
     }
 
-    private void notifyItemDescriptionChanged(MenuItem mi) {
-        for (MenuEventReceiver er : this.eventReceivers) {
-            er.updateItemDescriptionChanged(this.currentMenu, mi);
-        }
+    public void removeEventReceiver(MenuEventReceiver rec) {
+        this.eventReceivers.remove(rec);
     }
 
-    private void notifyItemSectionChanged(MenuItem mi, Section s) {
-        for (MenuEventReceiver er : this.eventReceivers) {
-            er.updateItemSectionChanged(this.currentMenu, s, mi);
-        }
-    }
 
-    private void notifySectionItemsRearranged(Section sec) {
-        for (MenuEventReceiver er : this.eventReceivers) {
-            er.updateSectionItemsRearranged(this.currentMenu, sec);
-        }
-    }
-
-    private void notifyFreeItemsRearranged() {
-        for (MenuEventReceiver er : this.eventReceivers) {
-            er.updateFreeItemsRearranged(this.currentMenu);
-        }
-    }
-
-    private void notifySectionsRearranged() {
-        for (MenuEventReceiver er : this.eventReceivers) {
-            er.updateSectionsRearranged(this.currentMenu);
-        }
-    }
-
-    private void notifySectionChangedName(Section s) {
-        for (MenuEventReceiver er : this.eventReceivers) {
-            er.updateSectionChangedName(this.currentMenu, s);
-        }
-    }
-
-    private void notifySectionDeleted(Section s, boolean itemsDeleted) {
-        for (MenuEventReceiver er : this.eventReceivers) {
-            er.updateSectionDeleted(this.currentMenu, s, itemsDeleted);
-        }
-    }
-
-    private void notifyMenuDeleted(Menu m) {
-        for (MenuEventReceiver er : this.eventReceivers) {
-            er.updateMenuDeleted(m);
-        }
-    }
-
-    private void notifyMenuPublishedState() {
-        for (MenuEventReceiver er : this.eventReceivers) {
-            er.updateMenuPublishedState(this.currentMenu);
-        }
-    }
-
-    private void notifyMenuTitleChanged() {
-        for (MenuEventReceiver er : this.eventReceivers) {
-            er.updateMenuTitleChanged(this.currentMenu);
-        }
-    }
-
-    private void notifyMenuFeaturesChanged() {
-        for (MenuEventReceiver er : this.eventReceivers) {
-            er.updateMenuFeaturesChanged(this.currentMenu);
-        }
-    }
-
-    private void notifyMenuItemAdded(MenuItem mi) {
-        for (MenuEventReceiver er : this.eventReceivers) {
-            er.updateMenuItemAdded(this.currentMenu, mi);
-        }
-    }
-
-    private void notifySectionAdded(Menu m, Section sec) {
-        for (MenuEventReceiver er : this.eventReceivers) {
-            er.updateSectionAdded(m, sec);
-        }
-    }
-
-    private void notifyMenuAdded(Menu m) {
-        for (MenuEventReceiver er : this.eventReceivers) {
-            er.updateMenuCreated(m);
-        }
-    }
+    /**
+     * <h2>GETTER AND SETTER</h2>
+     */
 
     public void setCurrentMenu(Menu m) {
         this.currentMenu = m;
@@ -311,11 +332,4 @@ public class MenuManager {
         return Menu.loadAllMenus();
     }
 
-    public void addEventReceiver(MenuEventReceiver rec) {
-        this.eventReceivers.add(rec);
-    }
-
-    public void removeEventReceiver(MenuEventReceiver rec) {
-        this.eventReceivers.remove(rec);
-    }
 }

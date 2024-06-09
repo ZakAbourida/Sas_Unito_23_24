@@ -30,10 +30,9 @@ public class Section {
         }
     }
 
-    public void addItem(MenuItem mi) {
-        this.sectionItems.add(mi);
-    }
-
+    /**
+     * <h2>METHODS FOR MAIN OPERATIONS</h2>
+     */
 
     public void updateItems(ArrayList<MenuItem> newItems) {
         ArrayList<MenuItem> updatedList = new ArrayList<>();
@@ -59,14 +58,11 @@ public class Section {
         return null;
     }
 
-
-    public int getItemPosition(MenuItem mi) {
-        return this.sectionItems.indexOf(mi);
+    public void moveItem(MenuItem mi, int position) {
+        sectionItems.remove(mi);
+        sectionItems.add(position, mi);
     }
 
-    public int getId() {
-        return id;
-    }
 
     public String testString() {
         String result = name + "\n";
@@ -76,30 +72,9 @@ public class Section {
         return result;
     }
 
-    public String toString() {
-        return name;
-    }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public ArrayList<MenuItem> getItems() {
-        return this.sectionItems;
-    }
-
-    public int getItemsCount() {
-        return sectionItems.size();
-    }
-
-
-    public void moveItem(MenuItem mi, int position) {
-        sectionItems.remove(mi);
-        sectionItems.add(position, mi);
+    public void addItem(MenuItem mi) {
+        this.sectionItems.add(mi);
     }
 
     public void removeItem(MenuItem mi) {
@@ -107,7 +82,10 @@ public class Section {
     }
 
 
-    // STATIC METHODS FOR PERSISTENCE
+    /**
+     * <h2>STATIC METHODS FOR PERSISTENCE</h2>
+     */
+
     public static void saveNewSection(int menuid, Section sec, int posInMenu) {
         String secInsert = "INSERT INTO catering.MenuSections (menu_id, name, position) VALUES (" +
                 menuid + ", " +
@@ -201,5 +179,37 @@ public class Section {
                 // no generated ids to handle
             }
         });
+    }
+
+    /**
+     * <h2>GETTER AND SETTER</h2>
+     */
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public ArrayList<MenuItem> getItems() {
+        return this.sectionItems;
+    }
+
+    public int getItemsCount() {
+        return sectionItems.size();
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public int getItemPosition(MenuItem mi) {
+        return this.sectionItems.indexOf(mi);
+    }
+
+    public String toString() {
+        return name;
     }
 }

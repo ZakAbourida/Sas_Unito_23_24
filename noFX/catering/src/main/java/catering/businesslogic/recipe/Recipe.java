@@ -21,19 +21,11 @@ public class Recipe extends ItemBook {
         this.name = name;
     }
 
-    public String getName() {
-        return name;
-    }
 
-    public int getId() {
-        return id;
-    }
 
-    public String toString() {
-        return name;
-    }
-
-    // STATIC METHODS FOR PERSISTENCE
+    /**
+     *<h2>STATIC METHODS FOR PERSISTENCE</h2>
+     */
 
     public static ArrayList<Recipe> loadAllRecipes() {
         String query = "SELECT * FROM Recipes";
@@ -61,10 +53,6 @@ public class Recipe extends ItemBook {
         return ret;
     }
 
-    public static ArrayList<Recipe> getAllRecipes() {
-        return new ArrayList<Recipe>(all.values());
-    }
-
     public static Recipe loadRecipeById(int id) {
         Recipe recipe = new Recipe();
         String query = "SELECT * FROM recipes WHERE id = " + id;
@@ -78,7 +66,27 @@ public class Recipe extends ItemBook {
         return recipe.id != 0 ? recipe : null;
     }
 
+    /**
+     * <h2>GETTER AND SETTER</h2>
+     */
+
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String toString() {
+        return name;
+    }
+
+    public static ArrayList<Recipe> getAllRecipes() {
+        return new ArrayList<Recipe>(all.values());
     }
 }

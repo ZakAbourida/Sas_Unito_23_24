@@ -16,13 +16,10 @@ public class SummarySheetManager {
 
     private List<SheetEventReceiver> eventReceivers = new ArrayList<>();
 
-    public void addReceiver(SheetEventReceiver receiver) {
-        eventReceivers.add(receiver);
-    }
 
-    public void removeReceiver(SheetEventReceiver receiver) {
-        eventReceivers.remove(receiver);
-    }
+    /**
+     * <h2>ALL NOTIFY METHODS</h2>
+     */
 
     public void notifySheetCreated(SummarySheet sheet) throws SQLException {
         for (SheetEventReceiver receiver : eventReceivers) {
@@ -96,6 +93,18 @@ public class SummarySheetManager {
         }
     }
 
+    /**
+     * <h2>METHODS FOR MAIN OPERATIONS</h2>
+     */
+
+    public void addReceiver(SheetEventReceiver receiver) {
+        eventReceivers.add(receiver);
+    }
+
+    public void removeReceiver(SheetEventReceiver receiver) {
+        eventReceivers.remove(receiver);
+    }
+
     public SummarySheet createSummarySheet(ServiceInfo service) throws SQLException, UseCaseLogicException {
         User user = CatERing.getInstance().getUserManager().getCurrentUser();
         if (user.isChef() && service.isAssignedChef(user) && service.isAssignedMenu()) {
@@ -116,12 +125,6 @@ public class SummarySheetManager {
         }
     }
 
-    public void deleteAssignment(Assignment asg) {
-        User user = CatERing.getInstance().getUserManager().getCurrentUser();
-        if (currentSheet.isOwner(user) && !currentSheet.isInProgress()) {
-            notifyAssignmentDeleted(asg);
-        }
-    }
 
     public boolean modifySheet(SummarySheet sheet) throws UseCaseLogicException {
         User user = CatERing.getInstance().getUserManager().getCurrentUser();
@@ -178,6 +181,13 @@ public class SummarySheetManager {
         notifyAssignmentCreated(sheet, assignment);
     }
 
+    public void deleteAssignment(Assignment asg) {
+        User user = CatERing.getInstance().getUserManager().getCurrentUser();
+        if (currentSheet.isOwner(user) && !currentSheet.isInProgress()) {
+            notifyAssignmentDeleted(asg);
+        }
+    }
+
     public void modifyCook(User cook, Assignment asg) throws UseCaseLogicException {
         modifySheet(currentSheet);
         currentSheet.setNewCook(cook, asg);
@@ -229,6 +239,10 @@ public class SummarySheetManager {
             throw new UseCaseLogicException();
         }
     }
+
+    /**
+     * <h2>GETTER AND SETTER</h2>
+     */
 
     public SummarySheet getCurrentSheet() {
         return currentSheet;

@@ -26,6 +26,9 @@ public class Assignment {
         this.time = 0;
     }
 
+    /**
+     * <h2>METHODS FOR MAIN OPERATIONS</h2>
+     */
 
     @Override
     public String toString() {
@@ -36,6 +39,10 @@ public class Assignment {
                 ", Portion: " + portion +
                 ", Time: " + time;
     }
+
+    /**
+     * <h2>STATIC METHODS FOR PERSISTENCE</h2>
+     */
 
     public static void loadAssignments(int sheetId, List<Assignment> assignments) {
         String query = "SELECT * FROM assignment WHERE sheet = " + sheetId;
@@ -58,6 +65,10 @@ public class Assignment {
             }
         });
     }
+
+    /**
+     * <h2>GETTER AND SETTER</h2>
+     */
 
     public void setPortion(int portion) {
         this.portion = portion;

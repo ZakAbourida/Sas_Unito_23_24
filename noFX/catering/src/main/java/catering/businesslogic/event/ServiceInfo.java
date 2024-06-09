@@ -26,16 +26,27 @@ public class ServiceInfo implements EventItemInfo {
     public ServiceInfo() {
     }
 
-    public int getId() {
-        return id;
-    }
+    /**
+     *<h2>METHODS FOR MAIN OPERATIONS</h2>
+     */
+
 
     public String toString() {
         return name + ": " + date + " (" + timeStart + "-" + timeEnd + "), " + participants + " pp.";
     }
 
-    // STATIC METHODS FOR PERSISTENCE
+    public boolean isAssignedChef(User user) {
+        return true;
+    }
 
+    public boolean isAssignedMenu() {
+        return true;
+    }
+
+
+    /**
+     * <h2>STATIC METHODS FOR PERSISTENCE</h2>
+     */
     public static ArrayList<ServiceInfo> loadServiceInfoForEvent(int event_id) {
         ArrayList<ServiceInfo> result = new ArrayList<>();
         String query = "SELECT id, name, service_date, time_start, time_end, expected_participants, proposed_menu_id " +
@@ -107,14 +118,9 @@ public class ServiceInfo implements EventItemInfo {
         return service.id != 0 ? service : null;
     }
 
-    public boolean isAssignedChef(User user) {
-        return true;
-    }
-
-    public boolean isAssignedMenu() {
-        return true;
-    }
-
+    /**
+     * <h2>GETTER AND SETTER</h2>
+     **/
     public SummarySheet getSheet() {
         return sheet;
     }
@@ -125,5 +131,9 @@ public class ServiceInfo implements EventItemInfo {
 
     public void setMenu(Menu menuDiEsempio) {
         this.menu = menuDiEsempio;
+    }
+
+    public int getId() {
+        return id;
     }
 }

@@ -17,19 +17,20 @@ public class RecipeBook extends ItemBook {
         this.itemBooks = new ArrayList<>();
     }
 
-    public List<ItemBook> getItemBooks() {
-        return itemBooks;
-    }
 
-    public void setItemBooks(List<ItemBook> itemBooks) {
-        this.itemBooks = itemBooks;
-    }
+    /**
+     * <h2>METHODS FOR MAIN OPERATIONS</h2>
+     */
+
 
     public void addItem(ItemBook itemBook) {
         this.itemBooks.add(itemBook);
     }
 
-    // STATIC METHODS FOR PERSISTENCE
+
+    /**
+     * <h2>STATIC METHODS FOR PERSISTENCE</h2>
+     */
 
     private static Map<Integer, RecipeBook> all = new HashMap<>();
 
@@ -97,6 +98,10 @@ public class RecipeBook extends ItemBook {
         });
     }
 
+    /**
+     * <h2>GETTER AND SETTER</h2>
+     */
+
     public static ArrayList<RecipeBook> getAllRecipeBooks() {
         return new ArrayList<>(all.values());
     }
@@ -109,5 +114,13 @@ public class RecipeBook extends ItemBook {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public List<ItemBook> getItemBooks() {
+        return itemBooks;
+    }
+
+    public void setItemBooks(List<ItemBook> itemBooks) {
+        this.itemBooks = itemBooks;
     }
 }

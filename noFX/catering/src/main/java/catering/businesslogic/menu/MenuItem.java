@@ -36,34 +36,10 @@ public class MenuItem {
         this.itemRecipe = mi.itemRecipe;
     }
 
-    public int getId() {
-        return id;
-    }
 
-
-    public String toString() {
-        return description;
-    }
-
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Recipe getItemRecipe() {
-        return itemRecipe;
-    }
-
-    public void setItemRecipe(Recipe itemRecipe) {
-        this.itemRecipe = itemRecipe;
-    }
-
-
-    // STATIC METHODS FOR PERSISTENCE
+    /**
+     * <h2>STATIC METHODS FOR PERSISTENCE</h2>
+     */
 
     public static void saveAllNewItems(int menuid, int sectionid, List<MenuItem> items) {
         String itemInsert = "INSERT INTO catering.MenuItems (menu_id, section_id, description, recipe_id, position) VALUES (?, ?, ?, ?, ?);";
@@ -138,5 +114,36 @@ public class MenuItem {
     public static void removeItem(MenuItem mi) {
         String rem = "DELETE FROM MenuItems WHERE id = " + mi.getId();
         PersistenceManager.executeUpdate(rem);
+    }
+
+
+    /**
+     * GETTER AND SETTER
+     */
+
+    public int getId() {
+        return id;
+    }
+
+
+    public String toString() {
+        return description;
+    }
+
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Recipe getItemRecipe() {
+        return itemRecipe;
+    }
+
+    public void setItemRecipe(Recipe itemRecipe) {
+        this.itemRecipe = itemRecipe;
     }
 }

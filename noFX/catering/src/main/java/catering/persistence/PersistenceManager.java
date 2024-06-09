@@ -87,7 +87,6 @@ public class PersistenceManager {
         return result;
     }
 
-    // Aggiungi questo metodo per gestire gli aggiornamenti con un UpdateHandler
     public static int executeUpdate(String query, UpdateHandler handler) {
         int result = 0;
         try (Connection conn = DriverManager.getConnection(url, username, password);

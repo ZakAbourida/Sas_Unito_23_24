@@ -75,53 +75,10 @@ public class Menu {
 
     }
 
-    public static void savefreeItemDeleted(Menu m, MenuItem mi) {
+    /**
+     *METHODS FOR MAIN OPERATIONS
+     */
 
-    }
-
-    public static Menu loadMenuById(int menuId) {
-        if (loadedMenus.containsKey(menuId)) {
-            return loadedMenus.get(menuId);
-        }
-
-        final Menu menu = new Menu();
-        String query = "SELECT * FROM menus WHERE id = " + menuId;
-        PersistenceManager.executeQuery(query, new ResultHandler() {
-            @Override
-            public void handle(ResultSet rs) throws SQLException {
-
-                menu.id = rs.getInt("id");
-                menu.title = rs.getString("title");
-                menu.published = rs.getBoolean("published");
-                // carica altre proprietà se necessario...
-            }
-        });
-
-        if (menu.id == 0) {
-            return null;
-        }
-
-        // Carica le caratteristiche del menu
-        String featuresQuery = "SELECT * FROM menufeatures WHERE menu_id = " + menu.id;
-        PersistenceManager.executeQuery(featuresQuery, rs -> {
-            while (rs.next()) {
-                menu.featuresMap.put(rs.getString("name"), rs.getBoolean("value"));
-            }
-        });
-
-        // Carica le sezioni del menu
-        menu.sections = Section.loadSectionsFor(menu.id);
-
-        // Carica le voci del menu
-        menu.freeItems = MenuItem.loadItemsFor(menu.id, 0);
-
-        loadedMenus.put(menu.id, menu);
-        return menu;
-    }
-
-    public boolean getFeatureValue(String feature) {
-        return this.featuresMap.get(feature);
-    }
 
     public void setFeatureValue(String feature, boolean val) {
         if (this.featuresMap.containsKey(feature)) {
@@ -129,41 +86,37 @@ public class Menu {
         }
     }
 
-    public String testString() {
-        String result = this.toString() + "\n";
-        for (String f : featuresMap.keySet()) {
-            result += f + ": " + featuresMap.get(f) + "\n";
-        }
-
-        result += "\n";
-        for (Section sec : sections) {
-            result += sec.testString();
-            result += "\n";
-        }
-
-        if (freeItems.size() > 0) {
-            result += "\n" + "VOCI LIBERE:\n";
-        }
-        for (MenuItem mi : freeItems) {
-            result += "\t" + mi.toString() + "\n";
-        }
-
-        return result;
-    }
-
-    public String toString() {
-        return title + (published ? " " : " non ") +
-                "pubblicato," + (inUse ? " " : " non ") + "in uso";
+    public void moveSection(Section sec, int position) {
+        sections.remove(sec);
+        sections.add(position, sec);
     }
 
 
-    public int getId() {
-        return id;
+    public void changeItemSection(MenuItem mi, Section oldsec, Section sec) {
+        if (oldsec == null) {
+            freeItems.remove(mi);
+        } else {
+            oldsec.removeItem(mi);
+        }
+
+        if (sec == null) {
+            freeItems.add(mi);
+        } else {
+            sec.addItem(mi);
+        }
     }
 
-    public String getTitle() {
-        return this.title;
+    public void moveFreeItem(MenuItem mi, int position) {
+        this.freeItems.remove(mi);
+        this.freeItems.add(position, mi);
     }
+
+    public void removeItem(MenuItem mi) {
+        Section sec = getSectionForItem(mi);
+        if (sec == null) freeItems.remove(mi);
+        else sec.removeItem(mi);
+    }
+
 
     public void addFakeSections() {
         this.sections.add(new Section("Antipasti"));
@@ -194,13 +147,6 @@ public class Menu {
         return mi;
     }
 
-    public int getSectionPosition(Section sec) {
-        return this.sections.indexOf(sec);
-    }
-
-    public ArrayList<Section> getSections() {
-        return this.sections;
-    }
 
     public Section getSectionForItem(MenuItem mi) {
         for (Section sec : sections) {
@@ -211,35 +157,6 @@ public class Menu {
         throw new IllegalArgumentException();
     }
 
-    public int getFreeItemPosition(MenuItem mi) {
-        return freeItems.indexOf(mi);
-    }
-
-    public ArrayList<MenuItem> getFreeItems() {
-        return this.freeItems;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-
-    public void setPublished(boolean b) {
-        published = b;
-    }
-
-
-    public boolean isInUse() {
-        return this.inUse;
-    }
-
-    public boolean isOwner(User u) {
-        return u.getId() == this.owner.getId();
-    }
-
-    public Map<String, Boolean> getFeatures() {
-        return this.featuresMap;
-    }
 
     public void updateFreeItems(ArrayList<MenuItem> newItems) {
         ArrayList<MenuItem> updatedList = new ArrayList<>();
@@ -297,47 +214,84 @@ public class Menu {
         this.sections.remove(s);
     }
 
-    public int getSectionCount() {
-        return sections.size();
+    public boolean isInUse() {
+        return this.inUse;
     }
 
-    public int getFreeItemCount() {
-        return freeItems.size();
+    public boolean isOwner(User u) {
+        return u.getId() == this.owner.getId();
     }
 
-
-    public void moveSection(Section sec, int position) {
-        sections.remove(sec);
-        sections.add(position, sec);
-    }
-
-
-    public void changeItemSection(MenuItem mi, Section oldsec, Section sec) {
-        if (oldsec == null) {
-            freeItems.remove(mi);
-        } else {
-            oldsec.removeItem(mi);
+    public String testString() {
+        String result = this.toString() + "\n";
+        for (String f : featuresMap.keySet()) {
+            result += f + ": " + featuresMap.get(f) + "\n";
         }
 
-        if (sec == null) {
-            freeItems.add(mi);
-        } else {
-            sec.addItem(mi);
+        result += "\n";
+        for (Section sec : sections) {
+            result += sec.testString();
+            result += "\n";
         }
+
+        if (freeItems.size() > 0) {
+            result += "\n" + "VOCI LIBERE:\n";
+        }
+        for (MenuItem mi : freeItems) {
+            result += "\t" + mi.toString() + "\n";
+        }
+
+        return result;
     }
 
-    public void moveFreeItem(MenuItem mi, int position) {
-        this.freeItems.remove(mi);
-        this.freeItems.add(position, mi);
+    public String toString() {
+        return title + (published ? " " : " non ") +
+                "pubblicato," + (inUse ? " " : " non ") + "in uso";
     }
 
-    public void removeItem(MenuItem mi) {
-        Section sec = getSectionForItem(mi);
-        if (sec == null) freeItems.remove(mi);
-        else sec.removeItem(mi);
+    public static void savefreeItemDeleted(Menu m, MenuItem mi) {
     }
 
-    // STATIC METHODS FOR PERSISTENCE
+
+    /**
+     * <h2>STATIC METHODS FOR PERSISTENCE</h2>
+     */
+
+    public static Menu loadMenuById(int menuId) {
+        if (loadedMenus.containsKey(menuId)) {
+            return loadedMenus.get(menuId);
+        }
+
+        final Menu menu = new Menu();
+        String query = "SELECT * FROM menus WHERE id = " + menuId;
+        PersistenceManager.executeQuery(query, new ResultHandler() {
+            @Override
+            public void handle(ResultSet rs) throws SQLException {
+
+                menu.id = rs.getInt("id");
+                menu.title = rs.getString("title");
+                menu.published = rs.getBoolean("published");
+            }
+        });
+
+        if (menu.id == 0) {
+            return null;
+        }
+
+        String featuresQuery = "SELECT * FROM menufeatures WHERE menu_id = " + menu.id;
+        PersistenceManager.executeQuery(featuresQuery, rs -> {
+            while (rs.next()) {
+                menu.featuresMap.put(rs.getString("name"), rs.getBoolean("value"));
+            }
+        });
+
+        menu.sections = Section.loadSectionsFor(menu.id);
+
+        menu.freeItems = MenuItem.loadItemsFor(menu.id, 0);
+
+        loadedMenus.put(menu.id, menu);
+        return menu;
+    }
 
     public static void saveNewMenu(Menu m) {
         String menuInsert = "INSERT INTO catering.Menus (title, owner_id, published) VALUES (?, ?, ?);";
@@ -565,5 +519,56 @@ public class Menu {
                 // no generated ids to handle
             }
         });
+    }
+
+    /**
+     * GETTER AND SETTER
+     */
+    public int getSectionCount() {
+        return sections.size();
+    }
+
+    public int getFreeItemCount() {
+        return freeItems.size();
+    }
+
+    public Map<String, Boolean> getFeatures() {
+        return this.featuresMap;
+    }
+
+    public int getFreeItemPosition(MenuItem mi) {
+        return freeItems.indexOf(mi);
+    }
+
+    public ArrayList<MenuItem> getFreeItems() {
+        return this.freeItems;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setPublished(boolean b) {
+        published = b;
+    }
+
+    public int getSectionPosition(Section sec) {
+        return this.sections.indexOf(sec);
+    }
+
+    public ArrayList<Section> getSections() {
+        return this.sections;
+    }
+
+    public boolean getFeatureValue(String feature) {
+        return this.featuresMap.get(feature);
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getTitle() {
+        return this.title;
     }
 }
