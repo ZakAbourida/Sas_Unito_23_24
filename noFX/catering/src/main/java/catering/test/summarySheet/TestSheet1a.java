@@ -8,7 +8,7 @@ import java.util.Scanner;
 
 public class TestSheet1a {
     /**
-     * OP.: DELETE
+     * OP.: DELETE SHEET
      */
     public static void main(String[] args) {
         System.out.println("TEST LOAD ALL SUMMARY SHEETS");

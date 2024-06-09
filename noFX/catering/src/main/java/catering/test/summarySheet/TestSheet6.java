@@ -13,33 +13,58 @@ import java.util.List;
 import java.util.Scanner;
 
 public class TestSheet6 {
+    /**
+     * OP.: ASSIGN_TIME_IN_ASSIGNMENT
+     */
     public static void main(String[] args) {
         try {
             System.out.println("LOGIN");
             CatERing.getInstance().getUserManager().fakeLogin("Lidia");
             User currentUser = CatERing.getInstance().getUserManager().getCurrentUser();
             System.out.println(currentUser);
+            System.out.println("------------------------------------");
 
-            System.out.println("\nGET EVENT INFO");
+            // Ottiene le informazioni sugli eventi
+            System.out.println("GET EVENT INFO");
             ArrayList<EventInfo> events = CatERing.getInstance().getEventManager().getEventInfo();
-            EventInfo selectedEvent = events.get(0); // Selezionare il primo evento per il test
-            System.out.println(selectedEvent);
-
-            ServiceInfo selectedService = selectedEvent.getServices().get(0); // Selezionare il primo servizio per il test
-            System.out.println(selectedService);
-
-            System.out.println("\nSummarySheets trovati per il servizio selezionato:");
-            List<SummarySheet> sheets = CatERing.getInstance().loadAllSummarySheetsForService(selectedService.getId());
-            for (int i = 0; i < sheets.size(); i++) {
-                System.out.println((i + 1) + ": SummarySheet ID: " + sheets.get(i).getId());
+            for (int i = 0; i < events.size(); i++) {
+                System.out.println((i + 1) + ": " + events.get(i));
             }
 
+            // Seleziona un evento
             Scanner scanner = new Scanner(System.in);
+            System.out.print("Seleziona il numero dell'evento desiderato: ");
+            int eventIndex = scanner.nextInt() - 1;
+            EventInfo selectedEvent = events.get(eventIndex);
+            System.out.println("Evento selezionato:");
+            System.out.println(selectedEvent);
+            System.out.println("------------------------------------");
+
+            // Seleziona un servizio per l'evento
+            List<ServiceInfo> services = selectedEvent.getServices();
+            for (int i = 0; i < services.size(); i++) {
+                System.out.println((i + 1) + ": " + services.get(i));
+            }
+
+            System.out.print("Seleziona il numero del servizio desiderato: ");
+            int serviceIndex = scanner.nextInt() - 1;
+            ServiceInfo selectedService = services.get(serviceIndex);
+            System.out.println("Servizio selezionato:");
+            System.out.println(selectedService);
+            System.out.println("------------------------------------");
+
+            // Carica i fogli riepilogativi per il servizio selezionato
+            System.out.println("SUMMARY SHEETS FOR SELECTED SERVICE");
+            List<SummarySheet> summarySheets = CatERing.getInstance().loadAllSummarySheetsForService(selectedService.getId());
+            for (int i = 0; i < summarySheets.size(); i++) {
+                System.out.println((i + 1) + ": SummarySheet ID: " + summarySheets.get(i).getId());
+            }
+
+            // Seleziona un foglio riepilogativo
             System.out.print("Seleziona il numero del SummarySheet desiderato: ");
             int sheetIndex = scanner.nextInt() - 1;
-            SummarySheet selectedSheet = sheets.get(sheetIndex);
-            CatERing.getInstance().getSummarySheetManager().setCurrentSheet(selectedSheet); //
-
+            SummarySheet selectedSheet = summarySheets.get(sheetIndex);
+            CatERing.getInstance().getSummarySheetManager().setCurrentSheet(selectedSheet); // Imposta il foglio corrente
 
             // Stampa il foglio riepilogativo con tutti i suoi oggetti associati
             System.out.println("\nDettagli del Summary Sheet:");
@@ -49,12 +74,10 @@ public class TestSheet6 {
             System.out.println("\nAssignments:");
             List<Assignment> assignments = selectedSheet.getAssignments();
             for (int i = 0; i < assignments.size(); i++) {
-                System.out.println((i + 1) + ": " +
-
-                        assignments.get(i).toString());
+                System.out.println((i + 1) + ": " + assignments.get(i).toString());
             }
 
-            System.out.print("Seleziona il numero dell'Assignment da modificare: ");
+            System.out.print("Seleziona il numero dell'assignment da modificare: ");
             int assignmentIndex = scanner.nextInt() - 1;
             Assignment selectedAssignment = assignments.get(assignmentIndex);
 

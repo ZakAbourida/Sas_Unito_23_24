@@ -7,6 +7,9 @@ import catering.businesslogic.user.User;
 import java.util.List;
 
 public class TestSheet8 {
+    /**
+     * OP.: CONSULT_TURNS
+     */
     public static void main(String[] args) {
         try {
             System.out.println("LOGIN");

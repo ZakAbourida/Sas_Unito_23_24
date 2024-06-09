@@ -12,6 +12,9 @@ import java.util.List;
 import java.util.Scanner;
 
 public class TestSheet7 {
+    /**
+     * OP.: WRITE_NOTE
+     */
     public static void main(String[] args) {
         try {
             System.out.println("LOGIN");
@@ -20,24 +23,42 @@ public class TestSheet7 {
             System.out.println("Utente loggato: " + currentUser.getUserName());
             System.out.println("------------------------------------");
 
+            // Ottiene le informazioni sugli eventi
             System.out.println("\nGET EVENT INFO");
             ArrayList<EventInfo> events = CatERing.getInstance().getEventManager().getEventInfo();
-            EventInfo selectedEvent = events.get(0); // Selezionare il primo evento per il test
+            for (int i = 0; i < events.size(); i++) {
+                System.out.println((i + 1) + ": " + events.get(i));
+            }
+
+            // Seleziona un evento
+            Scanner scanner = new Scanner(System.in);
+            System.out.print("Seleziona il numero dell'evento desiderato: ");
+            int eventIndex = scanner.nextInt() - 1;
+            EventInfo selectedEvent = events.get(eventIndex);
+            System.out.println("Evento selezionato:");
             System.out.println(selectedEvent);
             System.out.println("------------------------------------");
 
-            ServiceInfo selectedService = selectedEvent.getServices().get(0); // Selezionare il primo servizio per il test
-            System.out.println("SERVIZIO SELEZIONATO:");
+            // Seleziona un servizio per l'evento
+            List<ServiceInfo> services = selectedEvent.getServices();
+            for (int i = 0; i < services.size(); i++) {
+                System.out.println((i + 1) + ": " + services.get(i));
+            }
+
+            System.out.print("Seleziona il numero del servizio desiderato: ");
+            int serviceIndex = scanner.nextInt() - 1;
+            ServiceInfo selectedService = services.get(serviceIndex);
+            System.out.println("Servizio selezionato:");
             System.out.println(selectedService);
             System.out.println("------------------------------------");
 
+            // Carica i fogli riepilogativi per il servizio selezionato
             System.out.println("\nSummarySheets trovati per il servizio selezionato:");
             List<SummarySheet> sheets = CatERing.getInstance().loadAllSummarySheetsForService(selectedService.getId());
             for (int i = 0; i < sheets.size(); i++) {
                 System.out.println((i + 1) + ": SummarySheet ID: " + sheets.get(i).getId());
             }
 
-            Scanner scanner = new Scanner(System.in);
             System.out.print("Seleziona il numero del SummarySheet desiderato: ");
             int sheetIndex = scanner.nextInt() - 1;
             SummarySheet selectedSheet = sheets.get(sheetIndex);

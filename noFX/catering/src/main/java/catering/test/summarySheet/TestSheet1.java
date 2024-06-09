@@ -8,10 +8,12 @@ import catering.businesslogic.event.ServiceInfo;
 import catering.businesslogic.user.User;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
 public class TestSheet1 {
     /**
-     * OP.: CREATE
+     * OP.: CREATE SHEET
      */
     public static void main(String[] args) {
         try {
@@ -22,18 +24,31 @@ public class TestSheet1 {
 
             System.out.println("\nGET EVENT INFO");
             ArrayList<EventInfo> events = CatERing.getInstance().getEventManager().getEventInfo();
-            EventInfo selectedEvent = events.get(0);
+            for (int i = 0; i < events.size(); i++) {
+                System.out.println((i + 1) + ": " + events.get(i));
+            }
+
+            Scanner scanner = new Scanner(System.in);
+            System.out.print("Seleziona il numero dell'evento desiderato: ");
+            int eventIndex = scanner.nextInt() - 1;
+            EventInfo selectedEvent = events.get(eventIndex);
+            System.out.println("Evento selezionato:");
             System.out.println(selectedEvent);
 
-            ServiceInfo selectedService = selectedEvent.getServices().get(0);
+            List<ServiceInfo> services = selectedEvent.getServices();
+            for (int i = 0; i < services.size(); i++) {
+                System.out.println((i + 1) + ": " + services.get(i));
+            }
+
+            System.out.print("Seleziona il numero del servizio desiderato: ");
+            int serviceIndex = scanner.nextInt() - 1;
+            ServiceInfo selectedService = services.get(serviceIndex);
             System.out.println("Servizio selezionato:");
             System.out.println(selectedService);
-
 
             System.out.println("\nCREATE SUMMARY SHEET");
             SummarySheet summarySheet = CatERing.getInstance().getSummarySheetManager().createSummarySheet(selectedService);
             if (summarySheet != null) {
-
                 // Stampa il foglio riepilogativo con tutti i suoi oggetti associati
                 System.out.println("\nDettagli del Summary Sheet:");
                 System.out.println(summarySheet.testString());

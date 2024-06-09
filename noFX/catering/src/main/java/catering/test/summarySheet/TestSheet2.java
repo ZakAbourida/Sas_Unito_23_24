@@ -24,10 +24,26 @@ public class TestSheet2 {
 
             System.out.println("\nGET EVENT INFO");
             ArrayList<EventInfo> events = CatERing.getInstance().getEventManager().getEventInfo();
-            EventInfo selectedEvent = events.get(0); // Selezionare il primo evento per il test
+            for (int i = 0; i < events.size(); i++) {
+                System.out.println((i + 1) + ": " + events.get(i));
+            }
+
+            Scanner scanner = new Scanner(System.in);
+            System.out.print("Seleziona il numero dell'evento desiderato: ");
+            int eventIndex = scanner.nextInt() - 1;
+            EventInfo selectedEvent = events.get(eventIndex);
+            System.out.println("Evento selezionato:");
             System.out.println(selectedEvent);
 
-            ServiceInfo selectedService = selectedEvent.getServices().get(0); // Selezionare il primo servizio per il test
+            List<ServiceInfo> services = selectedEvent.getServices();
+            for (int i = 0; i < services.size(); i++) {
+                System.out.println((i + 1) + ": " + services.get(i));
+            }
+
+            System.out.print("Seleziona il numero del servizio desiderato: ");
+            int serviceIndex = scanner.nextInt() - 1;
+            ServiceInfo selectedService = services.get(serviceIndex);
+            System.out.println("Servizio selezionato:");
             System.out.println(selectedService);
 
             System.out.println("\nSummarySheets trovati per il servizio selezionato:");
@@ -36,7 +52,6 @@ public class TestSheet2 {
                 System.out.println((i + 1) + ": SummarySheet ID: " + sheets.get(i).getId());
             }
 
-            Scanner scanner = new Scanner(System.in);
             System.out.print("Seleziona il numero del SummarySheet desiderato: ");
             int sheetIndex = scanner.nextInt() - 1;
             SummarySheet selectedSheet = sheets.get(sheetIndex);

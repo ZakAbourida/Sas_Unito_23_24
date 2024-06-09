@@ -14,6 +14,9 @@ import java.util.List;
 import java.util.Scanner;
 
 public class TestSheet4 {
+    /**
+     * OP.: CREATE_ASSIGNMENT
+     */
     public static void main(String[] args) {
         try {
             System.out.println("LOGIN");
@@ -22,35 +25,51 @@ public class TestSheet4 {
             System.out.println("Utente loggato: " + currentUser.getUserName());
             System.out.println("------------------------------------");
 
-            // Get event info and select an event
+            // Ottiene le informazioni sugli eventi
             System.out.println("GET EVENT INFO");
             ArrayList<EventInfo> events = CatERing.getInstance().getEventManager().getEventInfo();
-            EventInfo selectedEvent = events.get(0); // Selezionare il primo evento per il test
+            for (int i = 0; i < events.size(); i++) {
+                System.out.println((i + 1) + ": " + events.get(i));
+            }
+
+            // Seleziona un evento
+            Scanner scanner = new Scanner(System.in);
+            System.out.print("Seleziona il numero dell'evento desiderato: ");
+            int eventIndex = scanner.nextInt() - 1;
+            EventInfo selectedEvent = events.get(eventIndex);
+            System.out.println("Evento selezionato:");
             System.out.println(selectedEvent);
             System.out.println("------------------------------------");
 
-            // Verifica e seleziona un servizio
-            System.out.println("SERVIZI DISPONIBILI PER L'EVENTO SELEZIONATO:");
-            for (ServiceInfo service : selectedEvent.getServices()) {
-                System.out.println(service);
+            // Seleziona un servizio per l'evento
+            List<ServiceInfo> services = selectedEvent.getServices();
+            for (int i = 0; i < services.size(); i++) {
+                System.out.println((i + 1) + ": " + services.get(i));
             }
-            System.out.println("------------------------------------");
 
-            // Selezionare un servizio specifico per il test
-            ServiceInfo selectedService = selectedEvent.getServices().get(0); // Selezionare il primo servizio per il test
-            System.out.println("SERVIZIO SELEZIONATO:");
+            System.out.print("Seleziona il numero del servizio desiderato: ");
+            int serviceIndex = scanner.nextInt() - 1;
+            ServiceInfo selectedService = services.get(serviceIndex);
+            System.out.println("Servizio selezionato:");
             System.out.println(selectedService);
             System.out.println("------------------------------------");
 
-            // Caricare il foglio riepilogativo per il servizio selezionato
-            System.out.println("SUMMARY SHEET FOR SELECTED SERVICE");
+            // Carica i fogli riepilogativi per il servizio selezionato
+            System.out.println("SUMMARY SHEETS FOR SELECTED SERVICE");
             List<SummarySheet> summarySheets = CatERing.getInstance().loadAllSummarySheetsForService(selectedService.getId());
+            for (int i = 0; i < summarySheets.size(); i++) {
+                System.out.println((i + 1) + ": SummarySheet ID: " + summarySheets.get(i).getId());
+            }
+
+            // Seleziona un foglio riepilogativo
+            System.out.print("Seleziona il numero del SummarySheet desiderato: ");
+            int sheetIndex = scanner.nextInt() - 1;
             SummarySheet summarySheet;
-            if (summarySheets.isEmpty()) {
+            if (sheetIndex >= 0 && sheetIndex < summarySheets.size()) {
+                summarySheet = summarySheets.get(sheetIndex);
+            } else {
                 summarySheet = CatERing.getInstance().getSummarySheetManager().createSummarySheet(selectedService);
                 summarySheet.setNote("Nota di esempio per il foglio riepilogativo");
-            } else {
-                summarySheet = summarySheets.get(0);
             }
             System.out.println(summarySheet.testString());
             System.out.println("------------------------------------");
@@ -66,7 +85,6 @@ public class TestSheet4 {
             List<Recipe> recipes = CatERing.getInstance().getRecipeManager().getRecipes();
             List<Turn> turns = CatERing.getInstance().loadAllTurnForService(selectedService.getId());
 
-            Scanner scanner = new Scanner(System.in);
             boolean createMoreAssignments = true;
 
             while (createMoreAssignments && !allUsers.isEmpty() && !turns.isEmpty() && !recipes.isEmpty()) {
