@@ -4,7 +4,6 @@ import catering.businesslogic.Turn.Turn;
 import catering.businesslogic.event.ServiceInfo;
 import catering.businesslogic.menu.Menu;
 import catering.businesslogic.recipe.Recipe;
-import catering.businesslogic.user.Cook;
 import catering.businesslogic.user.User;
 import catering.persistence.BatchUpdateHandler;
 import catering.persistence.PersistenceManager;
@@ -53,6 +52,12 @@ public class SummarySheet {
     public void addExtraTask(Recipe item) {
         if (!this.extraTask.contains(item)) {
             this.extraTask.add(item);
+        }
+    }
+
+    public void deleteExtraTask(Recipe item) {
+        if (this.extraTask.contains(item)) {
+            this.extraTask.remove(item);
         }
     }
 
@@ -172,6 +177,18 @@ public class SummarySheet {
             System.out.println("Errore durante l'aggiunta degli extra task al SummarySheet.");
         }
     }
+
+    public static void removeItem(SummarySheet sheet, Recipe item) {
+        String query = "DELETE FROM extratask WHERE sheet = ? AND task = ?";
+        PersistenceManager.executeUpdate(query, new UpdateHandler() {
+            @Override
+            public void handleUpdate(PreparedStatement ps) throws SQLException {
+                ps.setInt(1, sheet.getId());
+                ps.setInt(2, item.getId());
+            }
+        });
+    }
+
     public static void saveNewAssignment(SummarySheet sheet, Assignment assignment) {
         if (sheet == null || sheet.getId() == 0) {
             throw new IllegalArgumentException("SummarySheet cannot be null and must have a valid ID");
@@ -292,15 +309,15 @@ public class SummarySheet {
         PersistenceManager.executeQuery(query, new ResultHandler() {
             @Override
             public void handle(ResultSet rs) throws SQLException {
-                    SummarySheet sheet = new SummarySheet();
-                    sheet.id = rs.getInt("id");
-                    sheet.note = rs.getString("note");
-                    sheet.owner = User.loadUserById(rs.getInt("owner"));
-                    sheet.service = ServiceInfo.loadServiceInfoById(rs.getInt("service_id"));
-                    sheet.menu = Menu.loadMenuById(rs.getInt("menu"));
-                    sheet.loadExtraTasks();
-                    sheet.loadAssignments();
-                    sheets.add(sheet);
+                SummarySheet sheet = new SummarySheet();
+                sheet.id = rs.getInt("id");
+                sheet.note = rs.getString("note");
+                sheet.owner = User.loadUserById(rs.getInt("owner"));
+                sheet.service = ServiceInfo.loadServiceInfoById(rs.getInt("service_id"));
+                sheet.menu = Menu.loadMenuById(rs.getInt("menu"));
+                sheet.loadExtraTasks();
+                sheet.loadAssignments();
+                sheets.add(sheet);
             }
         });
         return sheets;
@@ -312,15 +329,15 @@ public class SummarySheet {
         PersistenceManager.executeQuery(query, new ResultHandler() {
             @Override
             public void handle(ResultSet rs) throws SQLException {
-                    SummarySheet sheet = new SummarySheet();
-                    sheet.id = rs.getInt("id");
-                    sheet.note = rs.getString("note");
-                    sheet.owner = User.loadUserById(rs.getInt("owner"));
-                    sheet.service = ServiceInfo.loadServiceInfoById(rs.getInt("service_id"));
-                    sheet.menu = Menu.loadMenuById(rs.getInt("menu"));
-                    sheet.loadExtraTasks(); // Carica gli extra tasks
-                    sheet.loadAssignments();
-                    sheets.add(sheet);
+                SummarySheet sheet = new SummarySheet();
+                sheet.id = rs.getInt("id");
+                sheet.note = rs.getString("note");
+                sheet.owner = User.loadUserById(rs.getInt("owner"));
+                sheet.service = ServiceInfo.loadServiceInfoById(rs.getInt("service_id"));
+                sheet.menu = Menu.loadMenuById(rs.getInt("menu"));
+                sheet.loadExtraTasks(); // Carica gli extra tasks
+                sheet.loadAssignments();
+                sheets.add(sheet);
             }
         });
         return sheets;
@@ -329,15 +346,14 @@ public class SummarySheet {
     public void loadExtraTasks() {
         String query = "SELECT * FROM extratask WHERE sheet = " + this.id;
         PersistenceManager.executeQuery(query, rs -> {
-                Recipe recipe = Recipe.loadRecipeById(rs.getInt("task"));
-                extraTask.add(recipe);
+            Recipe recipe = Recipe.loadRecipeById(rs.getInt("task"));
+            extraTask.add(recipe);
         });
     }
 
     public void loadAssignments() {
         Assignment.loadAssignments(this.id, this.assignments);
     }
-
 
 
     public String testString() {
@@ -389,4 +405,5 @@ public class SummarySheet {
     public Menu getMenu() {
         return this.menu;
     }
+
 }

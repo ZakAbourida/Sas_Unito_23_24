@@ -1,7 +1,6 @@
 package catering.businesslogic.Turn;
 
 
-
 import catering.businesslogic.event.ServiceInfo;
 
 import java.util.ArrayList;

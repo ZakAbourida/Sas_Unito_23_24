@@ -6,11 +6,11 @@ import catering.businesslogic.user.User;
 import catering.persistence.PersistenceManager;
 import catering.persistence.ResultHandler;
 
-import java.util.ArrayList;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Time;
+import java.util.ArrayList;
 
 public class ServiceInfo implements EventItemInfo {
     private int id;

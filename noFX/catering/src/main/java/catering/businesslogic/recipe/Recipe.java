@@ -7,7 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
-public class Recipe extends  ItemBook{
+public class Recipe extends ItemBook {
     private static Map<Integer, Recipe> all = new HashMap<>();
 
     private int id;
@@ -71,8 +71,8 @@ public class Recipe extends  ItemBook{
         PersistenceManager.executeQuery(query, new ResultHandler() {
             @Override
             public void handle(ResultSet rs) throws SQLException {
-                    recipe.id = rs.getInt("id");
-                    recipe.name = rs.getString("name");
+                recipe.id = rs.getInt("id");
+                recipe.name = rs.getString("name");
             }
         });
         return recipe.id != 0 ? recipe : null;

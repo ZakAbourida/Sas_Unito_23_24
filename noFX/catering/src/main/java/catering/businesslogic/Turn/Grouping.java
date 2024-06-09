@@ -10,5 +10,4 @@ public class Grouping {
         turns.add(turn);
     }
 
-    // Getter e setter per turns
 }

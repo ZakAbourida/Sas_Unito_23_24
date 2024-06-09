@@ -1,14 +1,13 @@
 package catering.businesslogic.event;
 
-import java.util.ArrayList;
+import catering.businesslogic.user.User;
+import catering.persistence.PersistenceManager;
+import catering.persistence.ResultHandler;
 
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
-import catering.businesslogic.user.User;
-import catering.persistence.PersistenceManager;
-import catering.persistence.ResultHandler;
+import java.util.ArrayList;
 
 public class EventInfo implements EventItemInfo {
     private int id;

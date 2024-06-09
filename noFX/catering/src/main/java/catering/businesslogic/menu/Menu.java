@@ -59,17 +59,17 @@ public class Menu {
         this.inUse = false;
         this.owner = owner;
         this.featuresMap = new HashMap<>();
-        for (String feat: m.featuresMap.keySet()) {
+        for (String feat : m.featuresMap.keySet()) {
             this.featuresMap.put(feat, m.featuresMap.get(feat));
         }
 
         this.sections = new ArrayList<>();
-        for (Section original: m.sections) {
+        for (Section original : m.sections) {
             this.sections.add(new Section(original));
         }
 
         this.freeItems = new ArrayList<>();
-        for (MenuItem original: m.freeItems) {
+        for (MenuItem original : m.freeItems) {
             this.freeItems.add(new MenuItem(original));
         }
 
@@ -152,7 +152,7 @@ public class Menu {
     }
 
     public String toString() {
-        return title  + (published ? " " : " non ") +
+        return title + (published ? " " : " non ") +
                 "pubblicato," + (inUse ? " " : " non ") + "in uso";
     }
 
@@ -519,7 +519,7 @@ public class Menu {
             // find if "in use"
             String inuseQ = "SELECT * FROM Services WHERE approved_menu_id = " + m.id +
                     " OR " +
-                    "proposed_menu_id = "+ m.id;
+                    "proposed_menu_id = " + m.id;
             PersistenceManager.executeQuery(inuseQ, new ResultHandler() {
                 @Override
                 public void handle(ResultSet rs) throws SQLException {
@@ -528,7 +528,7 @@ public class Menu {
                 }
             });
         }
-        for (Menu m: newMenus) {
+        for (Menu m : newMenus) {
             loadedMenus.put(m.id, m);
         }
         return new ArrayList<Menu>(loadedMenus.values());

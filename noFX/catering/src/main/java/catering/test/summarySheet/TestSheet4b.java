@@ -3,8 +3,8 @@ package catering.test.summarySheet;
 import catering.businesslogic.CatERing;
 import catering.businesslogic.SummarySheet.Assignment;
 import catering.businesslogic.SummarySheet.SummarySheet;
-import catering.businesslogic.UseCaseLogicException;
 import catering.businesslogic.Turn.Turn;
+import catering.businesslogic.UseCaseLogicException;
 import catering.businesslogic.event.EventInfo;
 import catering.businesslogic.event.ServiceInfo;
 import catering.businesslogic.user.User;
@@ -12,6 +12,7 @@ import catering.businesslogic.user.User;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+
 public class TestSheet4b {
     public static void main(String[] args) {
         try {

@@ -1,7 +1,6 @@
 package catering.businesslogic.Turn;
 
 
-
 import catering.businesslogic.event.EventInfo;
 import catering.businesslogic.event.ServiceInfo;
 import catering.businesslogic.user.User;
@@ -50,6 +49,7 @@ public class TurnManager {
             receiver.updateDeadlineAdded(turn, deadline);
         }
     }
+
     // Operation methods
     public Turn createTurn(ServiceInfo service) {
         Turn turn = new Turn();

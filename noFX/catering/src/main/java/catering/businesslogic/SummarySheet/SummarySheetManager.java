@@ -48,13 +48,7 @@ public class SummarySheetManager {
         }
     }
 
-    private void notifyItemsRearranged(Recipe item) {
-        for (SheetEventReceiver receiver : eventReceivers) {
-            receiver.updateExtraTaskRearranged(currentSheet, item);
-        }
-    }
-
-    private void notifyAssignmentCreated(SummarySheet sheet,Assignment asg) {
+    private void notifyAssignmentCreated(SummarySheet sheet, Assignment asg) {
         for (SheetEventReceiver receiver : eventReceivers) {
             receiver.updateAssignmentCreated(sheet, asg);
         }
@@ -96,9 +90,9 @@ public class SummarySheetManager {
         }
     }
 
-    private void notifyItemsRearanged(SummarySheet sheet) {
+    private void notifyExtraTaskDeleted(Recipe item) {
         for (SheetEventReceiver receiver : eventReceivers) {
-            receiver.updateSectionsRearranged(sheet);
+            receiver.updateExtraTaskDeleted(currentSheet, item);
         }
     }
 
@@ -106,7 +100,6 @@ public class SummarySheetManager {
         User user = CatERing.getInstance().getUserManager().getCurrentUser();
         if (user.isChef() && service.isAssignedChef(user) && service.isAssignedMenu()) {
             SummarySheet sheet = new SummarySheet(user, service);
-            SummarySheet.saveNewSummarySheet(sheet);
             service.setSheet(sheet);
             setCurrentSheet(sheet);
             notifySheetCreated(sheet);
@@ -150,11 +143,20 @@ public class SummarySheetManager {
         }
     }
 
+    public void removePreparationOrRecipe(Recipe item) throws UseCaseLogicException {
+        User user = CatERing.getInstance().getUserManager().getCurrentUser();
+        if (currentSheet.isOwner(user)) {
+            currentSheet.deleteExtraTask(item);
+            notifyExtraTaskDeleted(item);
+        } else {
+            throw new UseCaseLogicException();
+        }
+    }
+
     public void moveRecipePreparation(Recipe item, int pos) throws UseCaseLogicException {
         User user = CatERing.getInstance().getUserManager().getCurrentUser();
         if (currentSheet.isOwner(user)) {
             currentSheet.moveRecipePreparation(item, pos);
-            notifyItemsRearanged(currentSheet);
         } else {
             throw new UseCaseLogicException();
         }
@@ -173,7 +175,7 @@ public class SummarySheetManager {
         Assignment assignment = sheet.createAssignment(cook, turn, item);
         sheet.assignPortion(portion, assignment);
         sheet.assignTime(time, assignment);
-        notifyAssignmentCreated(sheet,assignment);
+        notifyAssignmentCreated(sheet, assignment);
     }
 
     public void modifyCook(User cook, Assignment asg) throws UseCaseLogicException {

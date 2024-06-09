@@ -15,6 +15,7 @@ public class RoomTurn extends Turn {
     public Date getDeadline() {
         return deadline;
     }
+
     public void setDeadline(Date deadline) {
         this.deadline = deadline;
     }

@@ -173,7 +173,7 @@ public class MenuManager {
 
         // l'item deve appartenere al menu, o in una sezione o come voce libera
         Section oldsec = currentMenu.getSectionForItem(mi);
-        if (oldsec == null && currentMenu.getFreeItemPosition(mi) < 0) throw  new UseCaseLogicException();
+        if (oldsec == null && currentMenu.getFreeItemPosition(mi) < 0) throw new UseCaseLogicException();
 
         // spostamento non necessario
         if (sec == oldsec) return;
@@ -187,14 +187,15 @@ public class MenuManager {
 
     public void editMenuItemDescription(MenuItem mi, String desc) throws UseCaseLogicException {
         if (currentMenu == null) throw new UseCaseLogicException();
-        if (currentMenu.getSectionForItem(mi) == null && currentMenu.getFreeItemPosition(mi) < 0) throw new UseCaseLogicException();
+        if (currentMenu.getSectionForItem(mi) == null && currentMenu.getFreeItemPosition(mi) < 0)
+            throw new UseCaseLogicException();
 
         mi.setDescription(desc);
 
         this.notifyItemDescriptionChanged(mi);
     }
 
-    public void deleteItem(MenuItem mi) throws  UseCaseLogicException {
+    public void deleteItem(MenuItem mi) throws UseCaseLogicException {
         if (currentMenu == null) throw new UseCaseLogicException();
         Section sec = null;
         try {
@@ -216,7 +217,7 @@ public class MenuManager {
 
     private void notifyItemDescriptionChanged(MenuItem mi) {
         for (MenuEventReceiver er : this.eventReceivers) {
-            er.updateItemDescriptionChanged(this.currentMenu,mi);
+            er.updateItemDescriptionChanged(this.currentMenu, mi);
         }
     }
 

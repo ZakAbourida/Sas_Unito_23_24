@@ -11,7 +11,7 @@ public class User {
 
     private static Map<Integer, User> loadedUsers = new HashMap<Integer, User>();
 
-    public static enum Role {SERVIZIO, CUOCO, CHEF, ORGANIZZATORE};
+    public static enum Role {SERVIZIO, CUOCO, CHEF, ORGANIZZATORE}
 
     private int id;
     private String username;
@@ -53,7 +53,7 @@ public class User {
         if (loadedUsers.containsKey(uid)) return loadedUsers.get(uid);
 
         User load = new User();
-        String userQuery = "SELECT * FROM Users WHERE id='"+uid+"'";
+        String userQuery = "SELECT * FROM Users WHERE id='" + uid + "'";
         PersistenceManager.executeQuery(userQuery, new ResultHandler() {
             @Override
             public void handle(ResultSet rs) throws SQLException {
@@ -89,7 +89,7 @@ public class User {
 
     public static User loadUser(String username) {
         User u = new User();
-        String userQuery = "SELECT * FROM Users WHERE username='"+username+"'";
+        String userQuery = "SELECT * FROM Users WHERE username='" + username + "'";
         PersistenceManager.executeQuery(userQuery, new ResultHandler() {
             @Override
             public void handle(ResultSet rs) throws SQLException {
@@ -122,6 +122,7 @@ public class User {
         }
         return u;
     }
+
     public static List<User> loadAllUsers() {
         List<User> users = new ArrayList<>();
         String query = "SELECT * FROM Users";

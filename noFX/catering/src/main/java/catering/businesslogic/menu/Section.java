@@ -7,8 +7,8 @@ import catering.persistence.ResultHandler;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Section {
     private int id;
@@ -25,7 +25,7 @@ public class Section {
         this.id = 0;
         this.name = s.name;
         this.sectionItems = new ArrayList<>();
-        for (MenuItem original: s.sectionItems) {
+        for (MenuItem original : s.sectionItems) {
             this.sectionItems.add(new MenuItem(original));
         }
     }
@@ -53,7 +53,7 @@ public class Section {
     }
 
     private MenuItem findItemById(int id) {
-        for (MenuItem mi: sectionItems) {
+        for (MenuItem mi : sectionItems) {
             if (mi.getId() == id) return mi;
         }
         return null;
@@ -70,7 +70,7 @@ public class Section {
 
     public String testString() {
         String result = name + "\n";
-        for (MenuItem mi: sectionItems) {
+        for (MenuItem mi : sectionItems) {
             result += "\t" + mi.toString() + "\n";
         }
         return result;
@@ -139,7 +139,7 @@ public class Section {
         });
 
         // salva le voci delle sezioni
-        for (Section s: sections) {
+        for (Section s : sections) {
             if (s.sectionItems.size() > 0) {
                 MenuItem.saveAllNewItems(menuid, s.id, s.sectionItems);
             }
@@ -160,7 +160,7 @@ public class Section {
             }
         });
 
-        for (Section s: result) {
+        for (Section s : result) {
             // load items
             s.sectionItems = MenuItem.loadItemsFor(menu_id, s.id);
         }

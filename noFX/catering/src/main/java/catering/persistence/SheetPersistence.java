@@ -4,9 +4,7 @@ import catering.businesslogic.SummarySheet.Assignment;
 import catering.businesslogic.SummarySheet.SheetEventReceiver;
 import catering.businesslogic.SummarySheet.SummarySheet;
 import catering.businesslogic.Turn.Turn;
-import catering.businesslogic.recipe.ItemBook;
 import catering.businesslogic.recipe.Recipe;
-import catering.businesslogic.user.Cook;
 import catering.businesslogic.user.User;
 
 import java.util.List;
@@ -31,12 +29,6 @@ public class SheetPersistence implements SheetEventReceiver {
     @Override
     public void updateAssignmentCreated(SummarySheet sheet, Assignment assignment) {
         SummarySheet.saveNewAssignment(sheet, assignment);
-    }
-
-    @Override
-    public void updateExtraTaskRearranged(SummarySheet sheet, Recipe item) {
-        // Implementazione della persistenza per la riorganizzazione degli extra task
-        // Non fornita nel contesto
     }
 
     @Override
@@ -75,6 +67,8 @@ public class SheetPersistence implements SheetEventReceiver {
     }
 
     @Override
-    public void updateSectionsRearranged(SummarySheet sheet) {//SummarySheet.rearrangeSections(sheet);
+    public void updateExtraTaskDeleted(SummarySheet sheet, Recipe item) {
+        SummarySheet.removeItem(sheet, item);
     }
+
 }
