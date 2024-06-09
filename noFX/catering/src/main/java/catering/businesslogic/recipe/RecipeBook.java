@@ -17,7 +17,6 @@ public class RecipeBook extends ItemBook {
         this.itemBooks = new ArrayList<>();
     }
 
-    // Getter e setter per itemBooks
     public List<ItemBook> getItemBooks() {
         return itemBooks;
     }
@@ -102,7 +101,6 @@ public class RecipeBook extends ItemBook {
         return new ArrayList<>(all.values());
     }
 
-    // Attributi e metodi specifici per RecipeBook
     private int id;
 
     public int getId() {

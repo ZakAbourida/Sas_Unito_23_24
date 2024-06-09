@@ -164,7 +164,6 @@ public class SummarySheet {
 
             @Override
             public void handleGeneratedIds(ResultSet rs, int count) throws SQLException {
-                // Non ci sono ID generati da gestire per questi inserimenti
             }
         });
 
