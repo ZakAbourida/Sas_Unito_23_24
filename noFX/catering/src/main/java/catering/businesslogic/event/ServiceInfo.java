@@ -27,7 +27,7 @@ public class ServiceInfo implements EventItemInfo {
     }
 
     /**
-     *<h2>METHODS FOR MAIN OPERATIONS</h2>
+     * <h2>METHODS FOR MAIN OPERATIONS</h2>
      */
 
 
@@ -54,23 +54,22 @@ public class ServiceInfo implements EventItemInfo {
         PersistenceManager.executeQuery(query, new ResultHandler() {
             @Override
             public void handle(ResultSet rs) throws SQLException {
-                while (rs.next()) {
-                    ServiceInfo serv = new ServiceInfo();
-                    serv.id = rs.getInt("id");
-                    serv.name = rs.getString("name");
-                    serv.date = rs.getDate("service_date");
-                    serv.timeStart = rs.getTime("time_start");
-                    serv.timeEnd = rs.getTime("time_end");
-                    serv.participants = rs.getInt("expected_participants");
 
-                    // Carica il menu associato se presente
-                    int menuId = rs.getInt("proposed_menu_id");
-                    if (menuId > 0) {
-                        serv.menu = Menu.loadMenuById(menuId);
-                    }
+                ServiceInfo serv = new ServiceInfo();
+                serv.id = rs.getInt("id");
+                serv.name = rs.getString("name");
+                serv.date = rs.getDate("service_date");
+                serv.timeStart = rs.getTime("time_start");
+                serv.timeEnd = rs.getTime("time_end");
+                serv.participants = rs.getInt("expected_participants");
 
-                    result.add(serv);
+                // Carica il menu associato se presente
+                int menuId = rs.getInt("proposed_menu_id");
+                if (menuId > 0) {
+                    serv.menu = Menu.loadMenuById(menuId);
                 }
+
+                result.add(serv);
             }
         });
 
