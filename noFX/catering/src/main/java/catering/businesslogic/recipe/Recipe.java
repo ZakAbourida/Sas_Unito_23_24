@@ -7,26 +7,41 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
+/**
+ * Represents a recipe with an ID and name. Provides methods to load recipes from the database and manage them.
+ */
 public class Recipe extends ItemBook {
     private static Map<Integer, Recipe> all = new HashMap<>();
 
     private int id;
     private String name;
 
+    /**
+     * Constructs a new {@code Recipe} with no initial values.
+     */
     private Recipe() {
     }
 
+    /**
+     * Constructs a new {@code Recipe} with the specified name.
+     *
+     * @param name The name of the recipe.
+     */
     public Recipe(String name) {
         id = 0;
         this.name = name;
     }
 
 
-
     /**
-     *<h2>STATIC METHODS FOR PERSISTENCE</h2>
+     * <h2>STATIC METHODS FOR PERSISTENCE</h2>
      */
 
+    /**
+     * Loads all recipes from the database.
+     *
+     * @return A list of all {@code Recipe} instances, sorted by name.
+     */
     public static ArrayList<Recipe> loadAllRecipes() {
         String query = "SELECT * FROM Recipes";
         PersistenceManager.executeQuery(query, new ResultHandler() {
@@ -53,6 +68,12 @@ public class Recipe extends ItemBook {
         return ret;
     }
 
+    /**
+     * Loads a specific recipe by its ID.
+     *
+     * @param id The ID of the recipe to load.
+     * @return The {@code Recipe} with the specified ID, or {@code null} if not found.
+     */
     public static Recipe loadRecipeById(int id) {
         Recipe recipe = new Recipe();
         String query = "SELECT * FROM recipes WHERE id = " + id;
@@ -74,6 +95,10 @@ public class Recipe extends ItemBook {
         this.id = id;
     }
 
+    public static ArrayList<Recipe> getAllRecipes() {
+        return new ArrayList<Recipe>(all.values());
+    }
+
     public String getName() {
         return name;
     }
@@ -84,9 +109,5 @@ public class Recipe extends ItemBook {
 
     public String toString() {
         return name;
-    }
-
-    public static ArrayList<Recipe> getAllRecipes() {
-        return new ArrayList<Recipe>(all.values());
     }
 }

@@ -7,12 +7,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
+/**
+ * Represents a user in the system with associated roles.
+ * <p>
+ * This class provides methods to load user data from the database and manage user roles.
+ * </p>
+ */
 public class User {
 
     private static Map<Integer, User> loadedUsers = new HashMap<Integer, User>();
-
-    public static enum Role {SERVIZIO, CUOCO, CHEF, ORGANIZZATORE}
-
     private int id;
     private String username;
     private Set<Role> roles;
@@ -24,32 +27,15 @@ public class User {
     }
 
     /**
-     * <h2>METHODS FOR MAIN OPERATIONS</h2>
-     */
-
-
-    public boolean isChef() {
-        return roles.contains(Role.CHEF);
-    }
-
-
-    public String toString() {
-        String result = username;
-        if (roles.size() > 0) {
-            result += ": ";
-
-            for (User.Role r : roles) {
-                result += r.toString() + " ";
-            }
-        }
-        return result;
-    }
-
-
-    /**
      * <h2>STATIC METHODS FOR PERSISTENCE</h2>
      */
 
+    /**
+     * Loads a user from the database based on their ID.
+     *
+     * @param uid The ID of the user to load.
+     * @return The user with the specified ID.
+     */
     public static User loadUserById(int uid) {
         if (loadedUsers.containsKey(uid)) return loadedUsers.get(uid);
 
@@ -88,6 +74,12 @@ public class User {
         return load;
     }
 
+    /**
+     * Loads a user from the database based on their username.
+     *
+     * @param username The username of the user to load.
+     * @return The user with the specified username.
+     */
     public static User loadUser(String username) {
         User u = new User();
         String userQuery = "SELECT * FROM Users WHERE username='" + username + "'";
@@ -124,6 +116,11 @@ public class User {
         return u;
     }
 
+    /**
+     * Loads all users from the database.
+     *
+     * @return A list of all users.
+     */
     public static List<User> loadAllUsers() {
         List<User> users = new ArrayList<>();
         String query = "SELECT * FROM Users";
@@ -170,13 +167,56 @@ public class User {
     }
 
     /**
+     * <h2>METHODS FOR MAIN OPERATIONS</h2>
+     */
+
+    /**
+     * Checks if the user has the role of CHEF.
+     *
+     * @return true if the user has the role of CHEF, false otherwise.
+     */
+    public boolean isChef() {
+        return roles.contains(Role.CHEF);
+    }
+
+    /**
+     * Returns a string representation of the user including their roles.
+     *
+     * @return A string representation of the user with their roles.
+     */
+    public String toString() {
+        String result = username;
+        if (roles.size() > 0) {
+            result += ": ";
+
+            for (User.Role r : roles) {
+                result += r.toString() + " ";
+            }
+        }
+        return result;
+    }
+
+    /**
      * <h2>GETTER AND SETTER</h2>
+     */
+
+    /**
+     * Returns the username of the user.
+     *
+     * @return The username of the user.
      */
     public String getUserName() {
         return username;
     }
 
+    /**
+     * Returns the ID of the user.
+     *
+     * @return The ID of the user.
+     */
     public int getId() {
         return this.id;
     }
+
+    public static enum Role {SERVIZIO, CUOCO, CHEF, ORGANIZZATORE}
 }

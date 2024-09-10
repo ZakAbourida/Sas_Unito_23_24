@@ -10,30 +10,27 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Represents a recipe book, which contains a collection of {@link ItemBook} items, including recipes and preparations.
+ */
 public class RecipeBook extends ItemBook {
-    private List<ItemBook> itemBooks;
 
+    private static Map<Integer, RecipeBook> all = new HashMap<>();
+    private List<ItemBook> itemBooks;
+    private int id;
+
+    /**
+     * Constructs a new {@code RecipeBook} with an empty list of item books.
+     */
     public RecipeBook() {
         this.itemBooks = new ArrayList<>();
     }
 
-
     /**
-     * <h2>METHODS FOR MAIN OPERATIONS</h2>
+     * Loads all recipe books from the database.
+     *
+     * @return A list of all {@code RecipeBook} instances.
      */
-
-
-    public void addItem(ItemBook itemBook) {
-        this.itemBooks.add(itemBook);
-    }
-
-
-    /**
-     * <h2>STATIC METHODS FOR PERSISTENCE</h2>
-     */
-
-    private static Map<Integer, RecipeBook> all = new HashMap<>();
-
     public static ArrayList<RecipeBook> loadAllRecipeBooks() {
         String query = "SELECT * FROM RecipeBooks";
         PersistenceManager.executeQuery(query, new ResultHandler() {
@@ -55,6 +52,12 @@ public class RecipeBook extends ItemBook {
         return new ArrayList<>(all.values());
     }
 
+    /**
+     * Loads a specific recipe book by its ID.
+     *
+     * @param id The ID of the recipe book to load.
+     * @return The {@code RecipeBook} with the specified ID.
+     */
     public static RecipeBook loadRecipeBookById(int id) {
         if (all.containsKey(id)) {
             return all.get(id);
@@ -76,6 +79,11 @@ public class RecipeBook extends ItemBook {
         return book;
     }
 
+    /**
+     * Loads items for a given recipe book.
+     *
+     * @param book The {@code RecipeBook} for which to load items.
+     */
     private static void loadItemsForRecipeBook(RecipeBook book) {
         String query = "SELECT * FROM RecipeBookItems WHERE book_id = " + book.getId();
         PersistenceManager.executeQuery(query, new ResultHandler() {
@@ -99,14 +107,26 @@ public class RecipeBook extends ItemBook {
     }
 
     /**
-     * <h2>GETTER AND SETTER</h2>
+     * Retrieves all recipe books.
+     *
+     * @return A list of all {@code RecipeBook} instances.
      */
-
     public static ArrayList<RecipeBook> getAllRecipeBooks() {
         return new ArrayList<>(all.values());
     }
 
-    private int id;
+    /**
+     * Adds an {@code ItemBook} to this {@code RecipeBook}.
+     *
+     * @param itemBook The {@code ItemBook} to be added.
+     */
+    public void addItem(ItemBook itemBook) {
+        this.itemBooks.add(itemBook);
+    }
+
+    /**
+     * <h2>GETTER AND SETTER</h2>
+     */
 
     public int getId() {
         return id;

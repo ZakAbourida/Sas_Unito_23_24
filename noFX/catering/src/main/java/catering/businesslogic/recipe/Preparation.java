@@ -7,15 +7,26 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
+/**
+ * Represents a preparation with an ID and name. Provides methods to load preparations from the database and manage them.
+ */
 public class Preparation extends ItemBook {
     private static Map<Integer, Preparation> all = new HashMap<>();
 
     private int id;
     private String name;
 
+    /**
+     * Constructs a new {@code Preparation} with no initial values.
+     */
     private Preparation() {
     }
 
+    /**
+     * Constructs a new {@code Preparation} with the specified name.
+     *
+     * @param name The name of the preparation.
+     */
     public Preparation(String name) {
         id = 0;
         this.name = name;
@@ -26,6 +37,11 @@ public class Preparation extends ItemBook {
      * <h2>STATIC METHODS FOR PERSISTENCE</h2>
      */
 
+    /**
+     * Loads all preparations from the database.
+     *
+     * @return A list of all {@code Preparation} instances, sorted by name.
+     */
     public static ArrayList<Preparation> loadAllPreparations() {
         String query = "SELECT * FROM Preparations";
         PersistenceManager.executeQuery(query, new ResultHandler() {
@@ -52,7 +68,12 @@ public class Preparation extends ItemBook {
         return ret;
     }
 
-
+    /**
+     * Loads a specific preparation by its ID.
+     *
+     * @param id The ID of the preparation to load.
+     * @return The {@code Preparation} with the specified ID, or {@code null} if not found.
+     */
     public static Preparation loadPreparationById(int id) {
         Preparation preparation = new Preparation();
         String query = "SELECT * FROM Preparations WHERE id = " + id;

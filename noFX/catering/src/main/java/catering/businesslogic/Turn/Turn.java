@@ -12,6 +12,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * Represents a turn, which includes details such as date, start and end times, location, and associated service information.
+ */
 public class Turn {
     private int id;
     private Date date;
@@ -24,19 +27,14 @@ public class Turn {
     }
 
     /**
-     *<h2>METHODS FOR MAIN OPERATIONS</h2>
+     * <h2>STATIC METHODS FOR PERSISTENCE</h2>
      */
 
-    @Override
-    public String toString() {
-        return "Date: " + date +
-                ", Start: " + start +
-                ", End: " + end +
-                ", Location: " + location;
-    }
-
     /**
-     * <h2>STATIC METHODS FOR PERSISTENCE</h2>
+     * Loads a turn from the database based on its ID.
+     *
+     * @param id The ID of the turn to be loaded.
+     * @return The loaded turn.
      */
     public static Turn loadTurnById(int id) {
         Turn turn = new Turn();
@@ -55,6 +53,12 @@ public class Turn {
         return turn;
     }
 
+    /**
+     * Loads all turns associated with a specific service.
+     *
+     * @param serviceId The ID of the service for which turns are to be loaded.
+     * @return A list of turns associated with the given service ID.
+     */
     public static List<Turn> loadAllTurnsForService(int serviceId) {
         List<Turn> turns = new ArrayList<>();
         String query = "SELECT * FROM turn WHERE service = " + serviceId;
@@ -74,6 +78,11 @@ public class Turn {
         return turns;
     }
 
+    /**
+     * Loads all turns from the database.
+     *
+     * @return A list of all turns.
+     */
     public static List<Turn> loadAllTurns() {
         List<Turn> turns = new ArrayList<>();
         String query = "SELECT * FROM turn";
@@ -90,17 +99,34 @@ public class Turn {
         return turns;
     }
 
-
     /**
-     *<h2>GETTER AND SETTER</h2>
+     * <h2>METHODS FOR MAIN OPERATIONS</h2>
      */
 
-    public void setLocation(String location) {
-        this.location = location;
+    /**
+     * Returns a string representation of the turn, including its date, start and end times, and location.
+     *
+     * @return A string describing the turn.
+     */
+    @Override
+    public String toString() {
+        return "Date: " + date +
+                ", Start: " + start +
+                ", End: " + end +
+                ", Location: " + location;
     }
 
+    /**
+     * Assigns a user to the turn.
+     *
+     * @param user The user to be assigned to the turn.
+     */
     public void assign(User user) {
     }
+
+    /**
+     * <h2>GETTER AND SETTER</h2>
+     */
 
     public int getId() {
         return id;
@@ -136,6 +162,10 @@ public class Turn {
 
     public String getLocation() {
         return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     public ServiceInfo getService() {

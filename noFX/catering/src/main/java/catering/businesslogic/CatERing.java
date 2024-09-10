@@ -14,22 +14,22 @@ import catering.persistence.SheetPersistence;
 
 import java.util.List;
 
+/**
+ * The central class of the catering business logic layer. It acts as a singleton
+ * providing access to various managers and persistence operations.
+ * <p>
+ * This class initializes and manages instances of {@link MenuManager}, {@link RecipeManager},
+ * {@link UserManager}, {@link EventManager}, and {@link SummarySheetManager}. It also handles
+ * the persistence layers for menus and summary sheets.
+ * </p>
+ */
 public class CatERing {
     private static CatERing singleInstance;
-
-    public static CatERing getInstance() {
-        if (singleInstance == null) {
-            singleInstance = new CatERing();
-        }
-        return singleInstance;
-    }
-
     private MenuManager menuMgr;
     private RecipeManager recipeMgr;
     private UserManager userMgr;
     private EventManager eventMgr;
     private SummarySheetManager sheetMgr;
-
     private MenuPersistence menuPersistence;
     private SheetPersistence sheetPersistence;
 
@@ -43,6 +43,13 @@ public class CatERing {
         sheetPersistence = new SheetPersistence();
         menuMgr.addEventReceiver(menuPersistence);
         sheetMgr.addReceiver(sheetPersistence);
+    }
+
+    public static CatERing getInstance() {
+        if (singleInstance == null) {
+            singleInstance = new CatERing();
+        }
+        return singleInstance;
     }
 
     public MenuManager getMenuManager() {

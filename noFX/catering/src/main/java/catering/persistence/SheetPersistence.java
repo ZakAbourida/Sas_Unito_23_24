@@ -9,6 +9,13 @@ import catering.businesslogic.user.User;
 
 import java.util.List;
 
+/**
+ * Implementation of the {@link SheetEventReceiver} interface for handling persistence operations.
+ * <p>
+ * This class provides concrete implementations for the methods defined in the {@link SheetEventReceiver}
+ * interface to interact with the {@link SummarySheet} class for database operations.
+ * </p>
+ */
 public class SheetPersistence implements SheetEventReceiver {
 
     @Override
