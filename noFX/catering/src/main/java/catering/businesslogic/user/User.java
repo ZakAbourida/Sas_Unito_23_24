@@ -180,6 +180,25 @@ public class User {
     }
 
     /**
+     * Checks if the user has the role of ORGANIZZATORE.
+     *
+     * @return true if the user has the role of ORGANIZZATORE, false otherwise.
+     */
+    public boolean isOrganiser() {
+        return roles.contains(Role.ORGANIZZATORE);
+    }
+
+    /**
+     * Checks if the user has the role of CUOCO.
+     *
+     * @return true if the user has the role of CUOCO, false otherwise.
+     */
+    public boolean isCook() {
+        return roles.contains(Role.CUOCO);
+    }
+
+
+    /**
      * Returns a string representation of the user including their roles.
      *
      * @return A string representation of the user with their roles.

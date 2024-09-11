@@ -16,6 +16,7 @@ public class Recipe extends ItemBook {
     private int id;
     private String name;
 
+
     /**
      * Constructs a new {@code Recipe} with no initial values.
      */

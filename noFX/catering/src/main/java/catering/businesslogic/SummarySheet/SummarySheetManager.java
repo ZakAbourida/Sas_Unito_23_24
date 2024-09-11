@@ -30,7 +30,7 @@ public class SummarySheetManager {
      * @param sheet The {@code SummarySheet} that was created.
      * @throws SQLException If a database access error occurs.
      */
-    public void notifySheetCreated(SummarySheet sheet) throws SQLException {
+    private void notifySheetCreated(SummarySheet sheet) throws SQLException {
         for (SheetEventReceiver receiver : eventReceivers) {
             receiver.updateSheetCreated(sheet);
         }
@@ -41,7 +41,7 @@ public class SummarySheetManager {
      *
      * @param sheet The {@code SummarySheet} that was deleted.
      */
-    public void notifySheetDeleted(SummarySheet sheet) {
+    private void notifySheetDeleted(SummarySheet sheet) {
         for (SheetEventReceiver receiver : eventReceivers) {
             receiver.updateSheetDeleted(sheet);
         }
