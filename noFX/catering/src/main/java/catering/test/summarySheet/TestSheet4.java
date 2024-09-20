@@ -85,61 +85,67 @@ public class TestSheet4 {
             List<Recipe> recipes = CatERing.getInstance().getRecipeManager().getRecipes();
             List<Turn> turns = CatERing.getInstance().loadAllTurnForService(selectedService.getId());
 
-            boolean createMoreAssignments = true;
+            // Verifica se i turni sono null o vuoti prima di entrare nel ciclo while
+            if (turns == null || turns.isEmpty()) {
+                System.out.println("I turni per questo servizio non sono ancora disponibili, non è possibile effettuare gli assegnamenti!");
+            } else {
+                boolean createMoreAssignments = true;
 
-            while (createMoreAssignments && !allUsers.isEmpty() && !turns.isEmpty() && !recipes.isEmpty()) {
-                System.out.println("Seleziona un utente:");
-                for (int j = 0; j < allUsers.size(); j++) {
-                    System.out.println((j + 1) + ". " + allUsers.get(j).getUserName());
+                while (createMoreAssignments && !allUsers.isEmpty() && !recipes.isEmpty()) {
+
+                    System.out.println("Seleziona un utente:");
+                    for (int j = 0; j < allUsers.size(); j++) {
+                        System.out.println((j + 1) + ". " + allUsers.get(j).getUserName());
+                    }
+                    int userIndex = scanner.nextInt() - 1;
+
+                    System.out.println("Seleziona una ricetta:");
+                    for (int j = 0; j < recipes.size(); j++) {
+                        System.out.println((j + 1) + ". " + recipes.get(j).getName());
+                    }
+                    int recipeIndex = scanner.nextInt() - 1;
+
+                    System.out.println("Seleziona un turno:");
+                    for (int j = 0; j < turns.size(); j++) {
+                        System.out.println((j + 1) + ". " + turns.get(j).toString());
+                    }
+                    int turnIndex = scanner.nextInt() - 1;
+
+                    System.out.println("Vuoi inserire la porzione? (true/false)");
+                    boolean insertPortion = scanner.nextBoolean();
+                    Integer portion = null;
+                    if (insertPortion) {
+                        System.out.println("Inserisci la porzione:");
+                        portion = scanner.nextInt();
+                    }
+
+                    System.out.println("Vuoi inserire il tempo? (true/false)");
+                    boolean insertTime = scanner.nextBoolean();
+                    Integer time = null;
+                    if (insertTime) {
+                        System.out.println("Inserisci il tempo:");
+                        time = scanner.nextInt();
+                    }
+
+                    CatERing.getInstance().getSummarySheetManager().createAssignment(
+                            summarySheet,
+                            allUsers.get(userIndex),
+                            turns.get(turnIndex),
+                            recipes.get(recipeIndex),
+                            portion,
+                            time
+                    );
+
+                    System.out.println("Vuoi creare un altro assegnamento? (true/false)");
+                    createMoreAssignments = scanner.nextBoolean();
                 }
-                int userIndex = scanner.nextInt() - 1;
+                System.out.println("------------------------------------");
 
-                System.out.println("Seleziona una ricetta:");
-                for (int j = 0; j < recipes.size(); j++) {
-                    System.out.println((j + 1) + ". " + recipes.get(j).getName());
-                }
-                int recipeIndex = scanner.nextInt() - 1;
-
-                System.out.println("Seleziona un turno:");
-                for (int j = 0; j < turns.size(); j++) {
-                    System.out.println((j + 1) + ". " + turns.get(j).toString());
-                }
-                int turnIndex = scanner.nextInt() - 1;
-
-                System.out.println("Vuoi inserire la porzione? (true/false)");
-                boolean insertPortion = scanner.nextBoolean();
-                Integer portion = null;
-                if (insertPortion) {
-                    System.out.println("Inserisci la porzione:");
-                    portion = scanner.nextInt();
-                }
-
-                System.out.println("Vuoi inserire il tempo? (true/false)");
-                boolean insertTime = scanner.nextBoolean();
-                Integer time = null;
-                if (insertTime) {
-                    System.out.println("Inserisci il tempo:");
-                    time = scanner.nextInt();
-                }
-
-                CatERing.getInstance().getSummarySheetManager().createAssignment(
-                        summarySheet,
-                        allUsers.get(userIndex),
-                        turns.get(turnIndex),
-                        recipes.get(recipeIndex),
-                        portion,
-                        time
-                );
-
-                System.out.println("Vuoi creare un altro assegnamento? (true/false)");
-                createMoreAssignments = scanner.nextBoolean();
+                // Stampa il foglio riepilogativo aggiornato
+                System.out.println("FOGLIO RIEPILOGATIVO AGGIORNATO:");
+                System.out.println(summarySheet.testString());
+                System.out.println("------------------------------------");
             }
-            System.out.println("------------------------------------");
-
-            // Stampa il foglio riepilogativo aggiornato
-            System.out.println("FOGLIO RIEPILOGATIVO AGGIORNATO:");
-            System.out.println(summarySheet.testString());
-            System.out.println("------------------------------------");
 
         } catch (UseCaseLogicException e) {
             System.out.println("Errore di logica nello use case");
